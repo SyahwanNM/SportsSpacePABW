@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Lapangan;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +13,36 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Buat satu user khusus untuk testing:
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'username'   => 'test_user',
+            'email'      => 'test@example.com',
+            'nama_user'  => 'Test User',
+            'password'   => bcrypt('password'),  // password default
+            'tanggal_lahir' => '1990-01-01',
+            'gender'     => 'Laki laki',
+            'kota'       => 'Jakarta',
+            'role'       => 'user',
+        ]);
+
+        // Panggil semua seeder lain sesuai urutan dependensi:
+        $this->call([
+            UserSeeder::class,
+            LapanganSeeder::class,
+            KomunitasSeeder::class,
+            AktivitasKomunitasSeeder::class,
+            PostSeeder::class,
+            KomentarPostinganSeeder::class,
+            LikePostinganSeeder::class,
+            RatingLapanganSeeder::class,
+            SaranaFavoritSeeder::class,
+            SportsGroupSeeder::class,
+            MemberSportsgroupSeeder::class,
+            RewardSeeder::class,
+            TransaksiPoinSeeder::class,
+            UserPoinSeeder::class,
+            KomunitasSayaSeeder::class,
         ]);
     }
 }
+

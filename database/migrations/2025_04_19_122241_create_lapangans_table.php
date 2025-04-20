@@ -4,18 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateLapangansTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('field', function (Blueprint $table) {
-            $table->id('id_field');
+        Schema::create('lapangans', function (Blueprint $table) {
+            $table->id('id_field');  // Menggunakan bigIncrements untuk id_field
             $table->string('nama_lapangan');
             $table->enum('type', ['Football', 'futsal', 'badminton', 'basket', 'jogging', 'volly']);
-            $table->enum('categori', ['paid', 'free']);
+            $table->enum('categori', ['paid', 'free', '']);
             $table->string('lokasi');
             $table->string('foto');
             $table->string('opening_hours');
@@ -23,15 +20,13 @@ return new class extends Migration
             $table->string('fasility');
             $table->integer('price');
             $table->string('description');
-            $table->timestamps(); // Jika kamu ingin menambahkan created_at dan updated_at
+            $table->string('address');
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('field');
+        Schema::dropIfExists('lapangans');
     }
-};
+}
