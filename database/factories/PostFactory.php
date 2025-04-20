@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 
 class PostFactory extends Factory
 {
@@ -11,6 +12,13 @@ class PostFactory extends Factory
 
     public function definition()
     {
+        // Tentukan direktori untuk gambar
+        $dir = public_path('images/posts');
+
+        // Pastikan direktori ada, jika belum buat
+        if (!File::exists($dir)) {
+            File::makeDirectory($dir, 0755, true); // Membuat folder jika belum ada
+        }
         return [
             'post_title'   => $this->faker->sentence(4),
             'post_content' => $this->faker->paragraph(),

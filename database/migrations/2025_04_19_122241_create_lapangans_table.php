@@ -19,7 +19,7 @@ class CreateLapangansTable extends Migration
             $table->string('closing_hours');
             $table->string('fasility');
             $table->integer('price');
-            $table->string('description');
+            $table->text('description');
             $table->string('address');
             $table->timestamps();
         });

@@ -9,6 +9,6 @@ class SaranaFavoritSeeder extends Seeder
 {
     public function run()
     {
-        SaranaFavorit::factory()->count(15)->create();
+        SaranaFavorit::factory()->count(5)->create();
     }
 }

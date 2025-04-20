@@ -10,6 +10,6 @@ class TransaksiPoinSeeder extends Seeder
 {
     public function run()
     {
-        TransaksiPoin::factory()->count(20)->create();
+        TransaksiPoin::factory()->count(5)->create();
     }
 }

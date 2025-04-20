@@ -9,6 +9,6 @@ class SportsGroupSeeder extends Seeder
 {
     public function run()
     {
-        SportsGroup::factory()->count(10)->create();
+        SportsGroup::factory()->count(5)->create();
     }
 }

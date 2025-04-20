@@ -9,8 +9,8 @@ class CreateRatingLapangansTable extends Migration
     public function up()
     {
         Schema::create('rating_lapangans', function (Blueprint $table) {
-            $table->id('id_rating'); // Menggunakan bigIncrements untuk id_rating
-            $table->unsignedBigInteger('id_field'); // Menggunakan unsignedBigInteger untuk id_field
+            $table->string('id_rating', 36)->primary(); // UUID disimpan sebagai string dengan panjang 36
+            $table->unsignedBigInteger('id_field');
             $table->unsignedBigInteger('user_id');
             $table->float('rating');
             $table->text('komentar')->nullable();
@@ -19,7 +19,7 @@ class CreateRatingLapangansTable extends Migration
             $table->index('user_id');
             $table->foreign('id_field')
                   ->references('id_field')
-                  ->on('lapangans') // Menggunakan tabel 'lapangans'
+                  ->on('lapangans')
                   ->onDelete('cascade');
             $table->foreign('user_id')
                   ->references('user_id')

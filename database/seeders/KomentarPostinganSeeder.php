@@ -9,6 +9,6 @@ class KomentarPostinganSeeder extends Seeder
 {
     public function run()
     {
-        KomentarPostingan::factory()->count(20)->create();
+        KomentarPostingan::factory()->count(5)->create();
     }
 }

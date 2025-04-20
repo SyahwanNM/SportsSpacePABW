@@ -9,6 +9,6 @@ class RatingLapanganSeeder extends Seeder
 {
     public function run()
     {
-        RatingLapangan::factory()->count(25)->create();
+        RatingLapangan::factory()->count(5)->create();
     }
 }

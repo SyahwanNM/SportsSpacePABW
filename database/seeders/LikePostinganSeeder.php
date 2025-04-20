@@ -9,6 +9,6 @@ class LikePostinganSeeder extends Seeder
 {
     public function run()
     {
-        LikePostingan::factory()->count(20)->create();
+        LikePostingan::factory()->count(5)->create();
     }
 }

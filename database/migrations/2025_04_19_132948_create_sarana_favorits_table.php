@@ -9,7 +9,7 @@ class CreateSaranaFavoritsTable extends Migration
     public function up()
     {
         Schema::create('sarana_favorits', function (Blueprint $table) {
-            $table->id();  // ID untuk tabel sarana_favorits
+            $table->char('id_favorit', 36)->primary(); // Menambahkan UUID sebagai id_favorit
             $table->unsignedBigInteger('id_field');  // Gunakan unsignedBigInteger untuk id_field
             $table->unsignedBigInteger('user_id');
             $table->timestamp('tanggal_ditambahkan')->useCurrent();

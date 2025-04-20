@@ -9,6 +9,6 @@ class UserPoinSeeder extends Seeder
 {
     public function run()
     {
-        UserPoin::factory()->count(15)->create();
+        UserPoin::factory()->count(5)->create();
     }
 }
