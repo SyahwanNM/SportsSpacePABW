@@ -28,7 +28,7 @@ class PostController extends Controller
         // Mengatur path gambar jika ada
         $imagePath = null;
         if ($request->hasFile('post_image')) {
-            $imagePath = $request->file('post_image')->store('posts', 'public');
+            $imagePath = $request->file('post_image')->store('images/posts', 'public');
         }
 
         // Menyimpan postingan baru ke database
@@ -42,4 +42,58 @@ class PostController extends Controller
         // Redirect kembali ke dashboard
         return redirect()->route('dashboard')->with('status', 'Post created successfully');
     }
+
+    // Menampilkan halaman edit
+    public function edit(Post $post)
+    {
+        return view('posts.edit', compact('post')); // Kirim data postingan ke form edit
+    }
+
+    // Mengupdate postingan
+    public function update(Request $request, Post $post)
+    {
+        // Validasi inputan
+        $request->validate([
+            'post_title' => 'required|max:255',
+            'post_content' => 'required',
+            'post_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Mengupdate data judul dan konten
+        $post->update([
+            'post_title' => $request->post_title,
+            'post_content' => $request->post_content,
+        ]);
+
+        // Mengupdate gambar jika ada
+        if ($request->hasFile('post_image')) {
+            // Hapus gambar lama jika ada
+            if ($post->post_image) {
+                Storage::delete('public/' . $post->post_image);
+            }
+
+            // Simpan gambar baru
+            $imagePath = $request->file('post_image')->store('images/posts', 'public');
+            $post->update(['post_image' => $imagePath]);
+        }
+
+        // Redirect kembali ke dashboard dengan pesan status
+        return redirect()->route('dashboard')->with('status', 'Post updated successfully');
+    }
+
+    // Menghapus postingan
+    public function destroy(Post $post)
+    {
+        // Hapus gambar jika ada
+        if ($post->post_image) {
+            Storage::delete('public/' . $post->post_image);
+        }
+
+        // Hapus postingan dari database
+        $post->delete();
+
+        // Redirect kembali ke dashboard dengan pesan status
+        return redirect()->route('dashboard')->with('status', 'Post deleted successfully');
+    }
+
 }

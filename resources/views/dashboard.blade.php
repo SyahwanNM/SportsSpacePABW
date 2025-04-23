@@ -416,7 +416,7 @@
                         </div>
                         <div class="mb-4">
                             <label for="post_image" class="block text-sm font-medium text-gray-700">Upload Gambar</label>
-                            <input type="file" id="post_image" name="post_image" accept="image/*" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                            <input type="file" id="post_image" name="post_image" accept="/images/posts" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
                         </div>
                         <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Submit</button>
                         </form>
@@ -430,36 +430,46 @@
                         });
                     </script>
                 </div>
-          
+   
                   <!-- Post List -->
-                  <!-- Daftar Postingan -->
-                  <div class="bg-white p-4 rounded-lg shadow mb-8">
+                  <div class="bg-white p-4 rounded-lg shadow mb-8 relative">
                      <h2 class="text-2xl font-bold text-red-700 mb-4">Activity Feed</h2>
                      @foreach($posts as $post)
-                        <div class="bg-white p-4 rounded-lg shadow mb-4">
-                           <div class="flex items-center mb-4">
+                         <div class="bg-white p-4 rounded-lg shadow mb-4 relative">
+                             <!-- Edit Button -->
+                             <div class="absolute top-2 right-2">
+                                 <a href="{{ route('posts.edit', $post) }}" class="text-blue-500 hover:text-blue-700 font-semibold">Edit</a>
+                                 <form action="{{ route('posts.destroy', $post) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-500 hover:text-red-700 font-semibold">Delete</button>
+                                </form>
+                             </div>
+                 
+                             <div class="flex items-center mb-4">
                                  <img alt="User Profile" class="rounded-full w-12 h-12" src="https://hackspirit.com/wp-content/uploads/2021/06/Copy-of-Rustic-Female-Teen-Magazine-Cover.jpg" />
                                  <div class="ml-3">
-                                    <p class="font-bold">Fadil</p>
-                                    <p class="text-gray-500 text-sm">{{ $post->created_at->format('d M Y h:i A') }}</p>
+                                     <p class="font-bold">Fadil</p>
+                                     <p class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($post->created_at)->format('d M Y h:i A') }}</p>
                                  </div>
-                           </div>
-                           <h3>{{ $post->post_title }}</h3>
-                           <p class="mb-4">{{ $post->post_content }}</p>
-                           @if($post->post_image)
+                             </div>
+                             <h3>{{ $post->post_title }}</h3>
+                             <p class="mb-4">{{ $post->post_content }}</p>
+                             @if($post->post_image)
                                  <img src="{{ asset('storage/' . $post->post_image) }}" alt="Post Image" class="w-full h-64 bg-cover bg-center rounded-lg mb-4 cursor-pointer">
-                           @endif
-                           <div class="flex space-x-4">
+                             @endif
+                             <div class="flex space-x-4">
                                  <button class="flex items-center text-gray-500 hover:text-red-500">
-                                    <i class="fi fi-rs-heart mr-1"></i> Like
+                                     <i class="fi fi-rs-heart mr-1"></i> Like
                                  </button>
                                  <button class="flex items-center text-gray-500 hover:text-green-500">
-                                    <i class="fi fi-rs-comment-alt mr-1"></i> Comment
+                                     <i class="fi fi-rs-comment-alt mr-1"></i> Comment
                                  </button>
-                           </div>
-                        </div>
+                             </div>
+                         </div>
                      @endforeach
-                  </div>
+                 </div>
+                 
           </div>  
         </div>
     </main>

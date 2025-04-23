@@ -23,6 +23,14 @@ Route::get('/dashboard', function () {
 // Route untuk menampilkan dashboard dan menambah postingan
 Route::get('/dashboard', [PostController::class, 'index'])->name('dashboard'); // Menampilkan semua postingan
 Route::post('/posts', [PostController::class, 'store'])->name('storePost'); // Menyimpan postingan baru
+// Route untuk menampilkan form edit postingan
+Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+
+// Route untuk memperbarui postingan
+Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+
+// Route untuk menghapus postingan
+Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
 // Route logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
