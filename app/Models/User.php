@@ -26,4 +26,9 @@ class User extends Authenticatable
     ];
 
     protected $hidden = ['password'];
+    
+    public function komunitas()
+    {
+        return $this->hasMany(Komunitas::class, 'user_id', 'id');
+    }
 }

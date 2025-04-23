@@ -31,14 +31,16 @@ class KomunitasController extends Controller
             'max_members' => 'required|integer',
             'provinsi' => 'required|string',
             'kota' => 'required|string',
-            'Deskripsi' => 'required|string',
+            'deskripsi' => 'required|string',
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'sampul' => 'required|image|mimes:jpg,jpeg,png|max:4096',
+            
         ]);
 
         // Upload file
         $fotoPath = $request->file('foto')->store('komunitas/foto', 'public');
         $sampulPath = $request->file('sampul')->store('komunitas/sampul', 'public');
+        
 
         // Simpan data ke database
         $komunitas = Komunitas::create([
@@ -47,35 +49,78 @@ class KomunitasController extends Controller
             'max_members' => $validated['max_members'],
             'provinsi' => $validated['provinsi'],
             'kota' => $validated['kota'],
-            'Deskripsi' => $validated['Deskripsi'],
+            'deskripsi' => $validated['deskripsi'],
             'foto' => $fotoPath,  // path disimpan di DB
             'sampul' => $sampulPath,
-            'user_id' => auth()->id() ?? 1, // ganti sesuai auth login, default user_id 1 untuk testing
+            'user_id' => auth()->id(),
         ]);
-
+        dd($komunitas);
         return redirect()->route('komunitas.index')->with('success', 'Komunitas berhasil dibuat!');
     }
 
     // Menampilkan satu data komunitas
-    public function show($id)
+    public function show($id_kmnts)
     {
-        $komunitas = Komunitas::findOrFail($id);
-        return response()->json($komunitas);
+        $komunitas = Komunitas::findOrFail($id_kmnts);
+        if (!$komunitas) {
+            return response()->json(['error' => 'Komunitas tidak ditemukan.'], 404);
+        }
+    
+        // Debugging: Tampilkan data komunitas dan id_user
+        dd($komunitas, $komunitas->user);
+        $user = $komunitas->user; 
+        return response()->json([
+            'komunitas' => $komunitas,
+            'user' => $user
+        ]);
     }
 
     // Menampilkan form edit (jika pakai view)
-    public function edit($id)
+    public function edit($id_kmnts)
     {
-        //
+    // Gunakan kolom 'id_kmnts' sebagai primary key
+    $komunitas = Komunitas::where('id_kmnts', $id_kmnts)->firstOrFail();
+    
+    // Kirim data komunitas ke view edit
+    return view('komunitas.edit_komunitas', compact('komunitas'));
     }
 
+
     // Update data komunitas
-    public function update(Request $request, $id)
-    {
-        $komunitas = Komunitas::findOrFail($id);
-        $komunitas->update($request->all());
-        return response()->json($komunitas);
-    }
+    public function update(Request $request, $id_kmnts)
+{
+    // Validasi input
+    $request->validate([
+        'nama' => 'required|max:255',
+        'jns_olahraga' => 'required',
+        'max_members' => 'required|integer',
+        'provinsi' => 'required',
+        'kota' => 'required',
+        'deskripsi' => 'required',
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+        'sampul' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+    ]);
+
+    // Ambil data komunitas yang akan diupdate
+    $komunitas = Komunitas::findOrFail($id_kmnts);
+    
+    // Update data komunitas
+    $komunitas->update([
+        'nama' => $request->nama,
+        'jns_olahraga' => $request->jns_olahraga,
+        'max_members' => $request->max_members,
+        'provinsi' => $request->provinsi,
+        'kota' => $request->kota,
+        'deskripsi' => $request->Deskripsi,
+        // Cek apakah foto dan sampul di-upload
+        'foto' => $request->hasFile('foto') ? $request->file('foto')->store('komunitas/foto') : $komunitas->foto,
+        'sampul' => $request->hasFile('sampul') ? $request->file('sampul')->store('komunitas/sampul') : $komunitas->sampul,
+    ]);
+
+    // Redirect setelah sukses update
+    return redirect()->route('komunitas.index')->with('success', 'Data komunitas berhasil diupdate!');
+}
+
 
     // Hapus data komunitas
     public function destroy($id)

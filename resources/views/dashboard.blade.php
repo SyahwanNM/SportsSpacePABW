@@ -199,7 +199,7 @@
             </li>
 
             <li>
-               <a href="/komunitas/komunitas.html" class="flex items-center w-full p-2 text-sm text-black hover:bg-red-700 hover:bg-red-700 hover:text-white duration-75 rounded-lg group" 
+               <a href="{{route('komunitas.index')}}" class="flex items-center w-full p-2 text-sm text-black hover:bg-red-700 hover:bg-red-700 hover:text-white duration-75 rounded-lg group" 
                   aria-controls="dropdown-example" 
                   data-collapse-toggle="dropdown-example">
                   <i class="fi fi-rs-users-alt"></i>   
