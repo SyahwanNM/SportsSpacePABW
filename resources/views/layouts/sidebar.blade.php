@@ -121,7 +121,7 @@
                      });
                   </script>
                   <li>
-                     <a href="/rewards/rewards.html" class="flex items-center p-2 text-black rounded-lg hover:bg-red-700 hover:text-white group">
+                     <a href="/ .html" class="flex items-center p-2 text-black rounded-lg hover:bg-red-700 hover:text-white group">
                         <i class="fi fi-rs-trophy-star"></i>
                         </i>
                         <span class="flex-1 ms-3 whitespace-nowrap">Reward</span>

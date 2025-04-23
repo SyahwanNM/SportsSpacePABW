@@ -15,7 +15,7 @@ class CreateKomunitasTable extends Migration
             $table->integer('max_members');
             $table->string('provinsi');
             $table->string('kota');
-            $table->text('deskripsi');
+            $table->text('deskripsi')->nullable()->change();;
             $table->string('foto');
             $table->string('sampul');
             $table->unsignedBigInteger('user_id');
@@ -26,6 +26,8 @@ class CreateKomunitasTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('komunitas');
+        Schema::table('komunitas', function (Blueprint $table) {
+            $table->text('deskripsi')->nullable(false)->change();
+        });
     }
 }
