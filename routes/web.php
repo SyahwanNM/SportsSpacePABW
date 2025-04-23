@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FieldController;
+use App\Http\Controllers\KomunitasController;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landingpage');  // Display landing page
 
@@ -54,3 +55,10 @@ Route::middleware(['web'])->group(function () {
     Route::put('/fields/{index}', [FieldController::class, 'update'])->name('fields.update');
     Route::delete('/fields/{index}', [FieldController::class, 'destroy'])->name('fields.destroy');
 })->name('fields');
+
+Route::get('/komunitas', [KomunitasController::class, 'index'])->name('komunitas.index');
+
+Route::get('/komunitas/create', [KomunitasController::class, 'create'])->name('komunitas.create');
+Route::get('/komunitas/{id}', [KomunitasController::class, 'show'])->name('komunitas.show');
+
+Route::post('/komunitas', [KomunitasController::class, 'store'])->name('komunitas.store');
