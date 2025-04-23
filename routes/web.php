@@ -67,6 +67,7 @@ Route::middleware(['web'])->group(function () {
 Route::get('/komunitas', [KomunitasController::class, 'index'])->name('komunitas.index');
 
 Route::get('/komunitas/create', [KomunitasController::class, 'create'])->name('komunitas.create');
-Route::get('/komunitas/{id}', [KomunitasController::class, 'show'])->name('komunitas.show');
-
+Route::get('/komunitas/{id_kmnts}', [KomunitasController::class, 'show'])->name('komunitas.show');
 Route::post('/komunitas', [KomunitasController::class, 'store'])->name('komunitas.store');
+Route::get('/komunitas/{id_kmnts}/edit', [KomunitasController::class, 'edit'])->name('komunitas.edit');
+Route::put('/komunitas/{id_kmnts}', [KomunitasController::class, 'update'])->name('komunitas.update');

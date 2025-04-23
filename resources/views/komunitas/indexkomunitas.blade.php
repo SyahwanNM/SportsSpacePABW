@@ -194,25 +194,42 @@
             </li>
 
             <li>
-                <a href="/komunitas/komunitas.html" class="flex text-sm items-center w-full p-2 text-black bg-red-700 hover:bg-red-700 text-white rounded-lg group" 
-                   aria-controls="dropdown-example" 
-                   data-collapse-toggle="dropdown-example">
-                    <i class="fi fi-rs-users-alt"></i>   
-                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Community</span>
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                    </svg>
-                </a>
-                <ul id="dropdown-example" class="hidden py-2 space-y-2">
-                    <li>
-                        <a href="/komunitas/myKomunitas.html" class="flex items-center w-full p-2 text-black hover:bg-red-600 transition duration-75 rounded-lg pl-11 hover:text-white">My Community</a>
-                    </li>
-                    <li>
-                        <!-- Update the 'href' to use the correct Laravel route -->
-                        <a href="{{ route('komunitas.create') }}" class="flex items-center w-full p-2 text-black hover:bg-red-600 hover:text-white transition duration-75 rounded-lg pl-11">Add Community</a>
-                    </li>
-                </ul>
+               <!-- Tombol untuk mengaktifkan dropdown -->
+            <a href="#" class="flex text-sm items-center w-full p-2 text-black bg-red-700 hover:bg-red-700 text-white rounded-lg group" 
+               aria-controls="dropdown-example" 
+               data-collapse-toggle="dropdown-example">
+               <i class="fi fi-rs-users-alt"></i>   
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Community</span>
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </a>
+
+            <!-- Dropdown yang akan ditampilkan -->
+            <ul id="dropdown-example" class="hidden py-2 space-y-2">
+               <li>
+                  <a href="/komunitas/myKomunitas.html" class="flex items-center w-full p-2 text-black hover:bg-red-600 transition duration-75 rounded-lg pl-11 hover:text-white">My Community</a>
+               </li>
+               <li>
+                  <a href="{{ route('komunitas.create') }}" class="flex items-center w-full p-2 text-black hover:bg-red-600 hover:text-white transition duration-75 rounded-lg pl-11">Add Community</a>
+               </li>
+            </ul>
             </li>
+
+            <script>
+            // Menangani klik untuk dropdown
+            document.addEventListener("DOMContentLoaded", function() {
+               const dropdownToggle = document.querySelectorAll('[data-collapse-toggle]');
+               
+               dropdownToggle.forEach(function(button) {
+                     button.addEventListener('click', function() {
+                        const dropdownId = button.getAttribute('data-collapse-toggle');
+                        const dropdown = document.getElementById(dropdownId);
+                        dropdown.classList.toggle('hidden'); // Menyembunyikan / Menampilkan dropdown
+                     });
+               });
+            });
+         </script>
 
             <li>
                 <a href="/fields/fields.html" class="flex items-center w-full p-2 text-sm text-black hover:bg-red-700 hover:bg-red-700 hover:text-white duration-75 rounded-lg group" 
@@ -274,82 +291,33 @@
             <div class="flex space-x-4 overflow-x-auto gap-4 pb-4 pr-4">
                <!-- Card 1 -->
                @foreach ($komunitas as $item)
-                <div class="bg-white shadow-lg rounded-lg p-4 m-1 w-45 hover:bg-gray-300 flex-shrink-0">
-                    <a href="{{ route('komunitas.show', $item->id_kmnts) }}">
-                        <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
-                        <h4 class="font-bold text-md">{{ $item->nama }}</h4>
-                        <div class="flex items-center text-sm text-gray-600">
-                            <span>{{ $item->jns_olahraga }}</span>
-                        </div>
-                        <p class="text-sm text-gray-500">{{ $item->kota }}</p>
-                        <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-                            <p>0/{{ $item->max_members }}</p>
-                            <i class="fas fa-user"></i>
-                        </div>
-                    </a>
-                </div>
+               <div class="bg-white shadow-lg rounded-lg p-4 m-1 w-45 hover:bg-gray-300 flex-shrink-0 relative">
+                  <!-- <a href="{{ route('komunitas.show', $item->id_kmnts) }}"> -->
+                     <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
+                     <h4 class="font-bold text-md">{{ $item->nama }}</h4>
+                     <div class="flex items-center text-sm text-gray-600">
+                           <span>{{ $item->jns_olahraga }}</span>
+                     </div>
+                     <p class="text-sm text-gray-500">{{ $item->kota }}</p>
+                     <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
+                           <p>0/{{ $item->max_members }}</p>
+                           <i class="fas fa-user"></i>
+                     </div>
+                  <!-- </a> -->
+
+                  <!-- Tombol Edit kecil -->
+                  <a href="{{ route('komunitas.edit', $item->id_kmnts)}}" class="absolute top-2 right-2 text-sm text-blue-500 hover:text-blue-700">
+                     <i class="fas fa-edit"></i> Edit
+                  </a>
+               </div>
+
                 @endforeach
             </div>
             
             <h2 class="text-2xl font-bold text-red-700 mb-2 mt-4">Community in Your City</h2>
             <div class="flex space-x-4 overflow-x-auto gap-4 pb-4 pr-4">
                <!-- Card 1 -->
-               <div class="bg-white shadow-lg rounded-lg p-4 m-1 w-45 hover:bg-gray-300 flex-shrink-0">
-                  <a href="detailKomunitas.html">
-                  <img src="../asset login/img/basket-bg.png" alt="Basket Majalaya" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
-                  <h4 class="font-bold text-md">Basket Majalaya</h4>
-                   <div class="flex items-center text-sm text-gray-600">
-                     <span>Futsal</span>
-                  </div>
-                  <p class="text-sm text-gray-500">Bandung</p>
-                  <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-                     <p>20/25</p>
-                     <i class="fas fa-user"></i>
-                  </div>
-                  </a>
-               </div>
                
-               <!-- Card 2 -->
-               <div class="bg-white shadow-lg rounded-lg p-4 m-1 w-45 hover:bg-gray-300 flex-shrink-0">
-                  <img src="../asset login/img/futsal-bg.jpg" alt="Basket Majalaya" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
-                  <h4 class="font-bold text-md">Futsal Community</h4>
-                  <div class="flex items-center text-sm text-gray-600">
-                     <span>Futsal</span>
-                  </div>
-                  <p class="text-sm text-gray-500">Bandung</p>
-                  <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-                     <p>17/25</p>
-                     <i class="fas fa-user"></i>
-                  </div>
-               </div>
-            
-               <!-- Card 3 -->
-               <div class="bg-white shadow-lg rounded-lg p-4 m-1 w-45 hover:bg-gray-300 flex-shrink-0">
-                  <img src="../asset login/img/badminton-bg.png" alt="Basket Majalaya" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
-                  <h4 class="font-bold text-md">Badminton Kuy</h4>
-                  <div class="flex items-center text-sm text-gray-600">
-                     <span>Badminton</span>
-                  </div>
-                  <p class="text-sm text-gray-500">bandung</p>
-                  <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-                     <p>10/25</p>
-                     <i class="fas fa-user"></i>
-                  </div>
-               </div>
-            
-               <!-- Card 4 -->
-               <div class="bg-white shadow-lg rounded-lg p-4 m-1 w-45 hover:bg-gray-300 flex-shrink-0">
-                  <img src="../asset login/img/tenis-bg.jpg" alt="Basket Majalaya" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
-                  <h4 class="font-bold text-md">Tennis Court</h4>
-                  <div class="flex items-center text-sm text-gray-600">
-                     <span>Futsal</span>
-                  </div>
-                  <p class="text-sm text-gray-500">bandung</p>
-                  <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-                     <p>8/25</p>
-                     <i class="fas fa-user"></i>
-                  </div>
-               </div>
             </div>   
          </div>
          <div class="lg:w-1/5 md:w-1/4 sm:w-full p-4">

@@ -15,7 +15,7 @@ class CreateKomunitasTable extends Migration
             $table->integer('max_members');
             $table->string('provinsi');
             $table->string('kota');
-            $table->text('Deskripsi');
+            $table->text('deskripsi');
             $table->string('foto');
             $table->string('sampul');
             $table->unsignedBigInteger('user_id');

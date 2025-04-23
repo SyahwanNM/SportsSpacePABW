@@ -10,7 +10,7 @@ class Komunitas extends Model
     use HasFactory;
 
     protected $table = 'komunitas';
-    
+    protected $primaryKey = 'id_kmnts';
     protected $fillable = [
         'id_kmnts',
         'nama',
@@ -18,9 +18,14 @@ class Komunitas extends Model
         'max_members',
         'provinsi',
         'kota',
-        'Deskripsi',
+        'deskripsi',
         'foto',
         'sampul',
         'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 }
