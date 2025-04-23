@@ -20,7 +20,7 @@ class CreateSportsGroupsTable extends Migration
             $table->integer('kapasitas_maksimal');
             $table->integer('current_members')->default(0);
             $table->string('jenis_olahraga', 255);
-            $table->set('payment_method', ['cash', 'transfer']);
+            $table->enum('payment_method', ['cash', 'transfer']);
             $table->integer('payment_amount');
             $table->timestamps(); // Menggunakan timestamps() untuk created_at dan updated_at
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');

@@ -431,139 +431,36 @@
                     </script>
                 </div>
           
-                <!-- Post Content -->
-                <div class="bg-white p-4 rounded-lg shadow mb-4">
-                    <div class="flex items-center mb-4">
-                        <img alt="User Profile" class="rounded-full w-12 h-12" src="/image/football.jpg" />
-                        <div class="ml-3">
-                        <p class="font-bold">Fadil</p>
-                        <p class="text-gray-500 text-sm">Hari ini 6.59 PM</p>
+                  <!-- Post List -->
+                  <!-- Daftar Postingan -->
+                  <div class="bg-white p-4 rounded-lg shadow mb-8">
+                     <h2 class="text-2xl font-bold text-red-700 mb-4">Activity Feed</h2>
+                     @foreach($posts as $post)
+                        <div class="bg-white p-4 rounded-lg shadow mb-4">
+                           <div class="flex items-center mb-4">
+                                 <img alt="User Profile" class="rounded-full w-12 h-12" src="https://hackspirit.com/wp-content/uploads/2021/06/Copy-of-Rustic-Female-Teen-Magazine-Cover.jpg" />
+                                 <div class="ml-3">
+                                    <p class="font-bold">Fadil</p>
+                                    <p class="text-gray-500 text-sm">{{ $post->created_at->format('d M Y h:i A') }}</p>
+                                 </div>
+                           </div>
+                           <h3>{{ $post->post_title }}</h3>
+                           <p class="mb-4">{{ $post->post_content }}</p>
+                           @if($post->post_image)
+                                 <img src="{{ asset('storage/' . $post->post_image) }}" alt="Post Image" class="w-full h-64 bg-cover bg-center rounded-lg mb-4 cursor-pointer">
+                           @endif
+                           <div class="flex space-x-4">
+                                 <button class="flex items-center text-gray-500 hover:text-red-500">
+                                    <i class="fi fi-rs-heart mr-1"></i> Like
+                                 </button>
+                                 <button class="flex items-center text-gray-500 hover:text-green-500">
+                                    <i class="fi fi-rs-comment-alt mr-1"></i> Comment
+                                 </button>
+                           </div>
                         </div>
-                    </div>
-                    <p class="mb-4">Rutinitas di hari libur!</p>
-                    <div
-                        class="w-full h-64 bg-cover bg-center rounded-lg mb-4 cursor-pointer"
-                        style="background-image: url('https://storage.googleapis.com/a1aa/image/j2eYnaJFczzsHC1aZzAyEOWuAIEeteVgrKnucLWeSwGxLWUPB.jpg');"
-                        data-popup-target="image-popup-1"
-                    >
-                    </div>
-                    <!-- Popup Gambar -->
-                    <div id="image-popup-1" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
-                        <div class="relative bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
-                        <!-- Tombol Close -->
-                        <button
-                            class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-2xl"
-                            data-popup-close
-                        >
-                            &times;
-                        </button>
-                        <!-- Gambar -->
-                        <div class="flex justify-center mb-4">
-                            <img
-                            src="https://storage.googleapis.com/a1aa/image/j2eYnaJFczzsHC1aZzAyEOWuAIEeteVgrKnucLWeSwGxLWUPB.jpg"
-                            alt="Full Image"
-                            class="max-w-full max-h-96 rounded-lg"
-                            />
-                        </div>
-                        <!-- Tombol Keluar -->
-                        <div class="flex justify-center">
-                            <button
-                            class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
-                            data-popup-close
-                            >
-                            Keluar
-                            </button>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="flex space-x-4">
-                        <button 
-                            class="flex items-center text-gray-500 hover:text-red-500">
-                            <i class="fi fi-rs-heart mr-1"></i>
-                            Like
-                        </button>
-                        <button 
-                            id="comment-btn-1" 
-                            class="flex items-center text-gray-500 hover:text-green-500"
-                            onclick="toggleCommentSection('comment-section-1')">
-                            <i class="fi fi-rs-comment-alt mr-1"></i>
-                            Comment
-                        </button>
-                    </div>
-                    <div id="comment-section-1" class="hidden mt-4">
-                        <textarea 
-                            class="w-full border border-gray-300 rounded-lg p-2 mb-2 focus:ring focus:ring-blue-300" 
-                            placeholder="Write your comment..."></textarea>
-                        <div class="flex justify-end">
-                            <button 
-                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                            onclick="submitComment('comment-section-1')">
-                            Submit
-                            </button>
-                        </div>
-                        </div>
-                    </div>
-                    <!-- Sidebar -->
-                    <div class="lg:w-1/5 md:w-1/4 sm:w-full p-4">
-                        <div class="fixed md:relative sm:relative">
-                            <!-- Friends List -->
-                            <div class="bg-white p-4 rounded-lg shadow mb-4">
-                            <h3 class="text-md font-bold mb-4">Friend</h3>
-                            <ul>
-                                <li class="flex items-center mb-2 hover:bg-gray-100 p-2 rounded-lg">
-                                    <img alt="Friend 1" class="rounded-full mr-2 w-8 h-8" src="https://storage.googleapis.com/a1aa/image/oDJoEMVqSvYhGBkeGM3OOYudbjHWHZwNX96KKC7DZwRfiF1TA.jpg"/>
-                                    <div>
-                                        <p class="text-sm">Wiyah</p>
-                                        <p class="text-gray-500 text-sm">Online 3 hours ago</p>
-                                    </div>
-                                </li>
-                                <li class="flex items-center mb-2 hover:bg-gray-100 p-2 rounded-lg">
-                                    <img alt="Friend 1" class="rounded-full mr-2 w-8 h-8" src="https://images.ctfassets.net/szez98lehkfm/owPUbtQc7an5ZEJhpHR6O/ae13d4541082f75d1bdba669f42487bb/MyIC_Article_98642"/>
-                                    <div>
-                                        <p class="text-sm">Jamson</p>
-                                        <p class="text-gray-500 text-sm">Online yesterday</p>
-                                    </div>
-                                </li>
-                                <li class="flex items-center mb-2 hover:bg-gray-100 p-2 rounded-lg">
-                                    <img alt="Friend 1" class="rounded-full mr-2 w-8 h-8"src="https://www.snexplores.org/wp-content/uploads/2020/05/1030_sports_science_numbers-1030x579.jpg"/>
-                                    <div>
-                                        <p class="text-sm">Andreas</p>
-                                        <p class="text-gray-500 text-sm" w-8 h-8>Online 5 hours ago</p>
-                                    </div>
-                                </li>
-                            </ul>
-                            </div>
-                            <!-- Incoming Activity -->
-                            <div class="bg-white p-4 rounded-lg shadow">
-                            <h3 class="text-md text-red-700 font-bold mb-4">Incoming Activity</h3>
-                            <div class="flex items-center mb-2 hover:bg-gray-100 hover:scale-105 transform p-2 rounded-lg">
-                                <div class="bg-red-700 text-white rounded-full w-10 h-10 flex items-center justify-center mr-2">
-                                    <p class="font-bold">20</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm">Futsal</p>
-                                    <p class="text-gray-500 text-sm">18.00 - 20.00</p>
-                                    <p class="text-gray-500 text-sm">Fun Game Bersama</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center mb-2 hover:bg-gray-100 hover:scale-105 transform p-2 rounded-lg">
-                                <div class="bg-red-700 text-white rounded-full w-10 h-10 flex items-center justify-center mr-2">
-                                    <p class="font-bold">20</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm">Badminton</p>
-                                    <p class="text-gray-500 text-sm">14.00 - 16.00</p>
-                                    <p class="text-gray-500 text-sm">Fun Game Bersama</p>
-                                </div>
-                                        </div>    
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
+                     @endforeach
+                  </div>
+          </div>  
         </div>
     </main>
   
