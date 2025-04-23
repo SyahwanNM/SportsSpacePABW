@@ -1,7 +1,21 @@
-@extends('layouts.app')
+@extends('layouts.sidebar')
+@extends('layouts.header')
+@extends('layouts.footer')
 
+<style>
+    #logo-sidebar {
+    width: 250px; /* Sesuaikan dengan lebar sidebar yang diinginkan */
+    transition: transform 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    #logo-sidebar {
+        width: 200px; /* Sesuaikan ukuran sidebar di perangkat mobile */
+    }
+}
+</style>
 @section('content')
-<div class="container mx-auto px-4 py-6">
+<div class="container mx-auto py-12">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold">Daftar Lapangan</h1>
         <a href="{{ route('fields.create') }}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">

@@ -1,18 +1,30 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SportSpace</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-    body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    </style>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sports Space</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    
+
+
+<!-- commit pertama di branch -->
+</head>
+<style>
+   body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+   }
+   
+  #crypto-modal {
+    max-width: 300px;
+    margin-top: 10px;
+    transform: translateX(-100px);
+  }
+</style>
 </head>
 
 <body class="bg-gray-100 min-h-screen">
@@ -23,7 +35,7 @@
             <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
                <ul class="space-y-2 text-sm">
                   <li>
-                     <a href="{{ route('dashboard') }}" class="flex items-center p-2 text-white bg-red-700 rounded-lg  group">
+                     <a href="{{ route('dashboard') }}" class="flex items-center w-full p-2 text-sm text-black hover:bg-red-700 hover:bg-red-700 hover:text-white duration-75 rounded-lg group" >
                         <i class="fi fi-rs-home">
                         </i>
                         <span class="ms-3">Dashboard</span>
@@ -71,7 +83,7 @@
                      });
                   </script>
                   <li>
-                     <a href="/fields/fields.html" class="flex text-sm items-center w-full p-2 text-black hover:bg-red-700 text-black hover:text-white rounded-lg group" 
+                     <a href="{{ route('fields.index') }}" class="flex text-sm items-center w-full p-2 text-black hover:bg-red-700 text-black hover:text-white rounded-lg group" 
                         aria-controls="dropdown-fields" 
                         data-collapse-toggle="dropdown-fields">
                         <i class="fi fi-rs-court-sport">
@@ -83,7 +95,7 @@
                      </a>
                      <ul id="dropdown-fields" class="hidden py-2 space-y-2">
                            <li>
-                              <a href="/fields/add-fields.html" class="flex items-center w-full p-2 text-black hover:bg-red-600 hover:text-white transition duration-75 rounded-lg pl-11">Add Fields</a>
+                              <a href="{{ route('fields.index') }}" class="flex items-center w-full p-2 text-black hover:bg-red-600 hover:text-white transition duration-75 rounded-lg pl-11">Add Fields</a>
                            </li>
                      </ul>
                   </li>

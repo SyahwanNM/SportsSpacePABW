@@ -81,18 +81,20 @@ class PostController extends Controller
         return redirect()->route('dashboard')->with('status', 'Post updated successfully');
     }
 
-    // Menghapus postingan
-    public function destroy(Post $post)
+    public function destroy($id_post)
     {
+        // Cari postingan berdasarkan ID
+        $post = Post::findOrFail($id_post);
+
         // Hapus gambar jika ada
         if ($post->post_image) {
-            Storage::delete('public/' . $post->post_image);
+            Storage::disk('public')->delete($post->post_image);
         }
 
-        // Hapus postingan dari database
+        // Hapus postingan
         $post->delete();
 
-        // Redirect kembali ke dashboard dengan pesan status
+        // Redirect kembali ke dashboard dengan status
         return redirect()->route('dashboard')->with('status', 'Post deleted successfully');
     }
 
