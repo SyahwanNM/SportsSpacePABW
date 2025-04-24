@@ -386,9 +386,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="block text-gray-700 font-bold">Description:</label>
-                            <textarea name="deskripsi" class="w-full border border-red-600 rounded p-2 h-24" required></textarea>
-                        </div>
+                           <label class="block text-gray-700 font-bold">Description:</label>
+                           <textarea name="deskripsi" class="w-full border border-red-600 rounded p-2 h-24" required>{{ old('deskripsi') }}</textarea>
+                       </div>
                     </div>
                 </div>
 

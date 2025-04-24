@@ -21,8 +21,7 @@ class KomunitasController extends Controller
         return view('komunitas.create_komunitas');
     }
 
-    // Menyimpan data komunitas baru
-    public function store(Request $request  )
+    public function store(Request $request)
     {
         // Validasi
         $validated = $request->validate([
@@ -34,13 +33,11 @@ class KomunitasController extends Controller
             'deskripsi' => 'required|string',
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'sampul' => 'required|image|mimes:jpg,jpeg,png|max:4096',
-            
         ]);
 
         // Upload file
         $fotoPath = $request->file('foto')->store('komunitas/foto', 'public');
         $sampulPath = $request->file('sampul')->store('komunitas/sampul', 'public');
-        
 
         // Simpan data ke database
         $komunitas = Komunitas::create([
@@ -50,13 +47,16 @@ class KomunitasController extends Controller
             'provinsi' => $validated['provinsi'],
             'kota' => $validated['kota'],
             'deskripsi' => $validated['deskripsi'],
-            'foto' => $fotoPath,  // path disimpan di DB
-            'sampul' => $sampulPath,
-            'user_id' => auth()->id(),
+            'foto' => $fotoPath,
+            'sampul' => $sampulPath, 
+            'user_id' => auth()->id() ?? 1 ,  // Menyimpan user_id yang sedang login  
         ]);
-        dd($komunitas);
+
+        // Redirect setelah berhasil
         return redirect()->route('komunitas.index')->with('success', 'Komunitas berhasil dibuat!');
     }
+
+
 
     // Menampilkan satu data komunitas
     public function show($id)
@@ -76,40 +76,39 @@ class KomunitasController extends Controller
     }
 
 
-    // Update data komunitas
     public function update(Request $request, $id_kmnts)
-{
-    // Validasi input
-    $request->validate([
-        'nama' => 'required|max:255',
-        'jns_olahraga' => 'required',
-        'max_members' => 'required|integer',
-        'provinsi' => 'required',
-        'kota' => 'required',
-        'deskripsi' => 'required',
-        'foto' => 'nullable|image|mimes:jpg,jpeg,png,gif',
-        'sampul' => 'nullable|image|mimes:jpg,jpeg,png,gif',
-    ]);
+    {
+        // Validasi input
+        $request->validate([
+            'nama' => 'required|max:255',
+            'jns_olahraga' => 'required',
+            'max_members' => 'required|integer',
+            'provinsi' => 'required',
+            'kota' => 'required',
+            'deskripsi' => 'required|string', // pastikan deskripsi valid
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+            'sampul' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+        ]);
 
-    // Ambil data komunitas yang akan diupdate
-    $komunitas = Komunitas::findOrFail($id_kmnts);
-    
-    // Update data komunitas
-    $komunitas->update([
-        'nama' => $request->nama,
-        'jns_olahraga' => $request->jns_olahraga,
-        'max_members' => $request->max_members,
-        'provinsi' => $request->provinsi,
-        'kota' => $request->kota,
-        'deskripsi' => $request->Deskripsi,
-        // Cek apakah foto dan sampul di-upload
-        'foto' => $request->hasFile('foto') ? $request->file('foto')->store('komunitas/foto') : $komunitas->foto,
-        'sampul' => $request->hasFile('sampul') ? $request->file('sampul')->store('komunitas/sampul') : $komunitas->sampul,
-    ]);
+        // Ambil data komunitas yang akan diupdate
+        $komunitas = Komunitas::findOrFail($id_kmnts);
 
-    // Redirect setelah sukses update
-    return redirect()->route('komunitas.index')->with('success', 'Data komunitas berhasil diupdate!');
-}
+        // Update data komunitas
+        $komunitas->update([
+            'nama' => $request->nama,
+            'jns_olahraga' => $request->jns_olahraga,
+            'max_members' => $request->max_members,
+            'provinsi' => $request->provinsi,
+            'kota' => $request->kota,
+            'deskripsi' => $request->deskripsi, // Pastikan ini adalah nama kolom yang tepat
+            'foto' => $request->hasFile('foto') ? $request->file('foto')->store('komunitas/foto') : $komunitas->foto,
+            'sampul' => $request->hasFile('sampul') ? $request->file('sampul')->store('komunitas/sampul') : $komunitas->sampul,
+        ]);
+
+        // Redirect setelah sukses update
+        return redirect()->route('komunitas.index')->with('success', 'Data komunitas berhasil diupdate!');
+    }
+
 
 
     // Hapus data komunitas
