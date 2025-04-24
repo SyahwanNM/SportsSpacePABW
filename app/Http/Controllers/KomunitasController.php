@@ -56,7 +56,7 @@ class KomunitasController extends Controller
         return redirect()->route('komunitas.index')->with('success', 'Komunitas berhasil dibuat!');
     }
 
-
+a
 
     // Menampilkan satu data komunitas
     public function show($id_kmnts)
