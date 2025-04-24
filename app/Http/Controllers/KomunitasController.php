@@ -59,20 +59,10 @@ class KomunitasController extends Controller
 a
 
     // Menampilkan satu data komunitas
-    public function show($id_kmnts)
+    public function show($id)
     {
-        $komunitas = Komunitas::findOrFail($id_kmnts);
-        if (!$komunitas) {
-            return response()->json(['error' => 'Komunitas tidak ditemukan.'], 404);
-        }
-    
-        // Debugging: Tampilkan data komunitas dan id_user
-        dd($komunitas, $komunitas->user);
-        $user = $komunitas->user; 
-        return response()->json([
-            'komunitas' => $komunitas,
-            'user' => $user
-        ]);
+        $komunitas = Komunitas::findOrFail($id);
+        return response()->json($komunitas);
     }
 
     // Menampilkan form edit (jika pakai view)
