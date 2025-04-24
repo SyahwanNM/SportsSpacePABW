@@ -56,13 +56,23 @@ class KomunitasController extends Controller
         return redirect()->route('komunitas.index')->with('success', 'Komunitas berhasil dibuat!');
     }
 
-a
+
 
     // Menampilkan satu data komunitas
-    public function show($id)
+    public function show($id_kmnts)
     {
-        $komunitas = Komunitas::findOrFail($id);
-        return response()->json($komunitas);
+        $komunitas = Komunitas::findOrFail($id_kmnts);
+        if (!$komunitas) {
+            return response()->json(['error' => 'Komunitas tidak ditemukan.'], 404);
+        }
+    
+        // Debugging: Tampilkan data komunitas dan id_user
+        dd($komunitas, $komunitas->user);
+        $user = $komunitas->user; 
+        return response()->json([
+            'komunitas' => $komunitas,
+            'user' => $user
+        ]);
     }
 
     // Menampilkan form edit (jika pakai view)
@@ -119,3 +129,4 @@ a
         return response()->json(null, 204);
     }
 }
+
