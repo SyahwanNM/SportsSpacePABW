@@ -128,15 +128,42 @@
                   <img class="w-10 h-10 rounded-full" src="https://hackspirit.com/wp-content/uploads/2021/06/Copy-of-Rustic-Female-Teen-Magazine-Cover.jpg" alt="user photo">
                   </button>
                </div>
-               <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-red-200 rounded shadow" id="dropdown-user">
+               <div class="z-50 hidden my-4 text-base list-none bg-white divide-y" id="dropdown-user">
                   <div class="px-4 py-3" role="none">
-                  <p class="text-sm text-black" role="none">
-                     Fadil Rahman
-                  </p>
-                  <p class="text-sm font-medium text-black truncate" role="none">
-                     Fadilrahman@gmail.com
-                  </p>
+                     <p id="userName" class="text-sm text-black" role="none"></p>
+                     <p id="userEmail" class="text-sm font-medium text-black truncate" role="none"></p>
                   </div>
+                  <script>
+                     (function(){
+                        const token = localStorage.getItem('auth_token');
+                        if (!token) {
+                           // Kalau belum login, redirect ke login page
+                           return window.location.href = "{{ route('login') }}";
+                        }
+
+                        // 1. Ambil data user dan isi header
+                        fetch('/api/user', {
+                           headers: {
+                           'Authorization': `Bearer ${token}`,
+                           'Accept': 'application/json'
+                           }
+                        })
+                        .then(res => {
+                           if (!res.ok) throw new Error('Not authenticated');
+                           return res.json();
+                        })
+                        .then(user => {
+                           document.getElementById('userName').textContent  = user.nama_user || user.username;
+                           document.getElementById('userEmail').textContent = user.email;
+                           // Kalau ada avatar: document.querySelector('#dropdown-user img').src = user.avatar_url;
+                        })
+                        .catch(() => {
+                           // Token invalid atau expired
+                           localStorage.removeItem('auth_token');
+                           window.location.href = "{{ route('login') }}";
+                        });
+                     })();
+                  </script>
                   <ul class="py-1" role="none">
                      <li>
                         <a href="#" class="block px-4 py-2 text-sm text-black hover:bg-red-700 hover:text-white" role="menuitem">About Us</a>
@@ -150,38 +177,65 @@
                   </ul>
                </div>
             </div>
-            <button data-modal-target="logout-modal" data-modal-toggle="logout-modal" class="text-red-900 hover:bg-red-600 hover:text-white font-medium rounded-full text-sm ml-2 px-5 py-2.5 text-center" type="button">
+            <button
+               type="button"
+               data-modal-target="logout-modal"
+               data-modal-toggle="logout-modal"
+               class="text-red-900 hover:bg-red-600 hover:text-white font-medium rounded-full text-sm ml-2 px-5 py-2.5"
+               >
                Log Out
             </button>
 
-               <div id="logout-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                  <div class="relative p-4 w-full max-w-md max-h-full">
-                     <div class="relative bg-white rounded-lg shadow dark:bg-white">
-                        <!-- Tombol Close -->
-                        <button type="button" class="absolute top-3 end-2.5 text-red-600 bg-transparent hover:bg-red-600 hover:text-white rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-red-700 dark:hover:text-white" data-modal-hide="logout-modal">
-                           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                           </svg>
-                           <span class="sr-only">Close modal</span>
+
+               <div id="logout-modal" tabindex="-1" class="hidden …">
+                  <div class="…">
+                     <div class="…">
+                        <!-- Tombol Close “×” -->
+                        <button type="button" data-modal-hide="logout-modal">×</button>
+                        <div class="p-4 text-center">
+                        <h3>Are you sure you want to log out?</h3>
+                        <!-- Tombol konfirmasi logout -->
+                        <button
+                           id="logoutConfirmBtn"
+                           data-modal-hide="logout-modal"
+                           class="text-white bg-red-600 … px-5 py-2.5"
+                        >
+                           Yes, log out
                         </button>
-                           
-                           <!-- Konten Modal -->
-                        <div class="p-4 md:p-5 text-center">
-                           <h3 class="mb-5 text-lg font-normal text-gray-900 dark:text-gray-900">Are you sure you want to log out?</h3>
-                              
-                           <!-- Tombol Yes -->
-                           <a href="/landingpage/firstpage.html" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                              Yes, log out
-                           </a>
-                              
-                           <!-- Tombol No -->
-                           <button data-modal-hide="logout-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-white focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                              No, cancel
-                           </button>
+                        <!-- Tombol Batal -->
+                        <button
+                           data-modal-hide="logout-modal"
+                           type="button"
+                           class="py-2.5 px-5 …"
+                        >
+                           No, cancel
+                        </button>
                         </div>
                      </div>
                   </div>
-               </div>  
+                  </div>
+
+               <script>
+                  (function(){
+                  const btn = document.getElementById('logoutConfirmBtn');
+                  btn.addEventListener('click', async () => {
+                     const token = localStorage.getItem('auth_token');
+                     try {
+                        await fetch('/api/logout', {
+                        method: 'POST',
+                        headers: {
+                           'Authorization': `Bearer ${token}`,
+                           'Accept': 'application/json'
+                        }
+                        });
+                     } catch (e) {
+                        console.error('Logout API error', e);
+                     }
+                     localStorage.removeItem('auth_token');
+                     window.location.href = "{{ route('login') }}";
+                  });
+                  })();
+               </script>
             </div>
          </div>
       </div>

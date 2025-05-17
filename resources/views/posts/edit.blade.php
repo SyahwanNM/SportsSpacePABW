@@ -2,33 +2,10 @@
 @extends('layouts.footer')
 @extends('layouts.sidebar')
 
-<style>
-    #logo-sidebar {
-   width: 250px; /* Sesuaikan dengan lebar sidebar yang diinginkan */
-   transition: transform 0.3s ease-in-out;
-}
-
-@media (max-width: 768px) {
-   #logo-sidebar {
-       width: 200px; /* Sesuaikan ukuran sidebar di perangkat mobile */
-   }
-}
-  body {
-     font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-  
- #crypto-modal {
-   max-width: 300px;
-   margin-top: 10px;
-   transform: translateX(-100px);
- }
- 
-</style>
-
 @section('content')
-<div class="container mx-aut py-12">
+<div class="container mx-auto py-12">
     <h2 class="text-2xl font-bold text-red-700 mb-4">Edit Post</h2>
-    <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded-lg shadow">
+    <form action="{{ route('posts.update', $post->id_post) }}" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded-lg shadow">
         @csrf
         @method('PUT')
 

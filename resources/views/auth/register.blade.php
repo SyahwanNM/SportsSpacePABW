@@ -174,17 +174,20 @@
             <p class="text-center mb-3 text-md font-bold">
                 <span>Create Your Account</span>
             </p>
-            <form action="#" class="space-y-4">
+            <form id="registerForm" class="space-y-4">
                 <div class="flex">
-                    <input type="email" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Your Email" required>
+                    <input type="email" name="email" id="email" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Your Email" required>
                 </div>
 
                 <div class="flex">
-                    <input type="text" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Username" required>
+                    <input type="text" name="username" id="username" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Username" required>
+                </div>
+                <div class="flex">
+                    <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="w-full px-3 py-2 text-sm font-medium border rounded-lg" required>
                 </div>
 
                 <div class="grid-cols-2">
-                    <select class="px-3 py-2 mr-3 rounded-lg" required>
+                    <select name="kota" id="kota" class="px-3 py-2 mr-3 rounded-lg" required>
                         <option class="text-gray-300" value="" disabled selected>Your City</option>
                         <option value="bandung">Bandung</option>
                         <option value="jakarta">Jakarta</option>
@@ -193,26 +196,86 @@
                         <option value="medan">Medan</option>
                         <option value="makassar">Makassar</option>
                         <option value="denpasar">Denpasar</option>
-                      </select>
-                      <select class="px-4 py-2 rounded-lg" required>
+                    </select>
+                    <select name="gender" id="gender" class="px-4 py-2 rounded-lg" required>
                         <option value="" disabled selected>Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </select>
-                </div>
-    
-                <div class="flex">
-                    <input type="password" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Password" required>
+                        <option value="Laki laki">Male</option>
+                        <option value="Perempuan">Female</option>
+                    </select>
                 </div>
 
                 <div class="flex">
-                    <input type="password" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Confirm Password" required>
+                    <input type="password" name="password" id="password" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Password" required>
                 </div>
-    
-                <button class="w-full py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-100">
-                    <a href="../login/loginNew.html">Sign Up</a>
+
+                <div class="flex">
+                    <input type="password" name="password_confirmation" id="password_confirmation" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Confirm Password" required>
+                </div>
+
+                <button type="submit" class="w-full py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-100">
+                    Sign Up
                 </button>
             </form>
+
+            <script>
+            document.getElementById('registerForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const rawDate = document.getElementById('tanggal_lahir').value; // biasanya dalam format mm/dd/yyyy (tergantung browser)
+                const dateObj = new Date(rawDate);
+
+                // Membuat format yyyy-mm-dd
+                const formattedDate = dateObj.getFullYear() + '-' +
+                String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
+                String(dateObj.getDate()).padStart(2, '0');
+
+                const data = {
+                    email: document.getElementById('email').value,
+                    username: document.getElementById('username').value,
+                    tanggal_lahir: formattedDate,
+                    kota: document.getElementById('kota').value,
+                    gender: document.getElementById('gender').value,
+                    password: document.getElementById('password').value,
+                    password_confirmation: document.getElementById('password_confirmation').value,
+                };
+
+
+                // Jika ada field wajib lain seperti nama_user dan tanggal_lahir, tambahkan input dan ambil nilainya
+
+                try {
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            // Jika pakai CSRF token, bisa ditambahkan di sini
+                        },
+                        body: JSON.stringify(data),
+                    });
+
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        alert('Registration successful! Please login.');
+                        window.location.href = "{{ route('login') }}"; // arahkan ke halaman login
+                    } else {
+                        // Tampilkan error dari API
+                        let messages = '';
+                        if(result.errors) {
+                            for(const key in result.errors) {
+                                messages += `${result.errors[key].join(', ')}\n`;
+                            }
+                        } else if(result.message) {
+                            messages = result.message;
+                        }
+                        alert('Registration failed:\n' + messages);
+                    }
+                } catch (error) {
+                    alert('Error submitting form');
+                    console.error(error);
+                }
+            });
+            </script>
             <hr class="my-2">
 
             <p class="text-center text-sm font-medium">

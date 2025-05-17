@@ -215,38 +215,94 @@
             </p>
                 
             
-            <form action="{{ route('login.submit') }}" method="POST" class="space-y-4">
-                @csrf
+            <form id="loginForm" class="space-y-4">
                 <div class="flex">
-                    <input type="email" name="email" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Your Email" required>
+                    <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    class="w-full px-3 py-2 border rounded-lg"
+                    placeholder="Your Email"
+                    required
+                    >
                 </div>
-        
+
                 <div class="flex">
-                    <input type="password" name="password" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Password" required>
+                    <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    class="w-full px-3 py-2 border rounded-lg"
+                    placeholder="Password"
+                    required
+                    >
                 </div>
-        
+
                 <label class="flex items-center space-x-2">
                     <input type="checkbox" class="rounded-sm">
                     <span class="text-sm">Remember me</span>
                 </label>
-        
-                <button type="submit" class="w-full py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-100">
+
+                <button
+                    type="submit"
+                    class="w-full py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition"
+                >
                     Login
                 </button>
-            </form>
-            @if ($errors->any())
-            <div class="bg-red-500 text-white p-3 rounded-lg mb-4">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
+                </form>
+
+                <div id="loginErrors" class="mt-4 text-red-500"></div>
+
+            <script>
+                document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // ambil nilai
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const errorsDiv = document.getElementById('loginErrors');
+                errorsDiv.textContent = '';
+
+                try {
+                    const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok) {
+                    // simpan token & redirect
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('user_id', data.user.user_id.toString());
+                    window.location.href = "{{ route('dashboard') }}";
+                    } else {
+                    // tampilkan error di bawah form
+                    let msg = '';
+                    if (data.errors) {
+                        for (let key in data.errors) {
+                        msg += data.errors[key].join(', ') + '\n';
+                        }
+                    } else if (data.message) {
+                        msg = data.message;
+                    }
+                    errorsDiv.textContent = msg;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    errorsDiv.textContent = 'Gagal terhubung ke server.';
+                }
+                });
+            </script>
+
             <hr class="my-2">
 
             <p class="text-center text-sm font-medium">
-                Don't Have An Account Yet? <a href="../register/registerNew.html" class="text-blue-500 hover:underline">Sign Up Here</a>
+                Don't Have An Account Yet? <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Sign Up Here</a>
             </p>
 
             <p class="text-center mt-30 text-sm">

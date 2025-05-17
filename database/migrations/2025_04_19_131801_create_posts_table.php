@@ -10,10 +10,17 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->integer('id_post')->autoIncrement();
-            $table->string('post_title',255);
+            
+            // Kolom user_id dengan tipe yang sama seperti primary key user_id di users table
+            $table->unsignedBigInteger('user_id');
+            
+            $table->string('post_title', 255);
             $table->text('post_content');
-            $table->string('post_image',255)->nullable();
+            $table->string('post_image', 255)->nullable();
             $table->timestamp('created_at')->useCurrent();
+
+            // Foreign key constraint, mengacu ke user_id di tabel users
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 

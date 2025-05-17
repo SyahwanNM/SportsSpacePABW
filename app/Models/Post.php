@@ -2,25 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon; // Import Carbon
+use App\Models\User; // jangan lupa import User model
 
 class Post extends Model
 {
-    use HasFactory;
-
-    protected $table = 'posts';
+    protected $table      = 'posts';
     protected $primaryKey = 'id_post';
-    public $timestamps = false; // Nonaktifkan timestamps jika Anda tidak ingin Laravel otomatis mengelola created_at dan updated_at
-
-    // Menambahkan properti $dates agar Laravel mengonversi 'created_at' menjadi Carbon instance
-    protected $dates = ['created_at'];
+    public $timestamps    = false;
 
     protected $fillable = [
         'post_title',
         'post_content',
         'post_image',
         'created_at',
+        'user_id',   // pastikan juga user_id ada di fillable
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 }

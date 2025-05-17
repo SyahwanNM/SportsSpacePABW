@@ -109,14 +109,12 @@
                 <h2 class="text-2xl font-bold text-red-700 mb-2">Weekly Activity</h2>
                 <p class="text-gray-500 mb-4">Activity Feed</p>
                 <button id="createPostBtn" class="text-blue-500 flex items-center hover:text-blue-700">
-                        Buat Postingan
-                        <i class="fas fa-plus ml-2"></i>
-                    </button>
-                
-                    <!-- Form to add a post, initially hidden -->
-                    <div id="postForm" class="hidden mt-4">
-                        <form action="{{ route('storePost') }}" method="POST" enctype="multipart/form-data" class="bg-gray-100 p-4 rounded-lg shadow">
-                        @csrf
+                    Buat Postingan
+                    <i class="fas fa-plus ml-2"></i>
+                </button>
+
+                <div id="postForm" class="hidden mt-4">
+                    <form id="createPostForm" class="bg-gray-100 p-4 rounded-lg shadow" enctype="multipart/form-data">
                         <div class="mb-4">
                             <label for="post_title" class="block text-sm font-medium text-gray-700">Judul</label>
                             <input type="text" id="post_title" name="post_title" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
@@ -127,85 +125,137 @@
                         </div>
                         <div class="mb-4">
                             <label for="post_image" class="block text-sm font-medium text-gray-700">Upload Gambar</label>
-                            <input type="file" id="post_image" name="post_image" accept="/images/posts" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                            <input type="file" id="post_image" name="post_image" accept="image/*" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
                         </div>
+
                         <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Submit</button>
-                        </form>
-                    </div>
-                    
-                    <script>
-                        // JavaScript to toggle form visibility
-                        document.getElementById('createPostBtn').addEventListener('click', function() {
-                        const form = document.getElementById('postForm');
-                        form.classList.toggle('hidden');
-                        });
-                    </script>
+                    </form>
                 </div>
-   
-                  <!-- Post List -->
-                  <div class="bg-white p-4 rounded-lg shadow mb-8 relative">
-                     <h2 class="text-2xl font-bold text-red-700 mb-4">Activity Feed</h2>
-                     @foreach($posts as $post)
-                         <div class="bg-white p-4 rounded-lg shadow mb-4 relative">
-                             <!-- Edit Button -->
-                             <div class="absolute top-2 right-2">
-                                 <a href="{{ route('posts.edit', $post) }}" class="text-blue-500 hover:text-blue-700 font-semibold">Edit</a>
-                                 <!-- Delete Button -->
-                                 <button class="text-red-500 hover:text-red-700 font-semibold" data-modal-toggle="deleteModal{{ $post->id_post }}">Delete</button>
-                             </div>
-                               <!-- Delete Confirmation Modal -->
-                              <div id="deleteModal{{ $post->id_post }}" tabindex="-1" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-                                 <div class="relative p-4 w-full max-w-md bg-white rounded-lg shadow-lg">
-                                    <!-- Tombol Close -->
-                                    <button type="button" class="absolute top-3 right-3 text-red-600 bg-transparent hover:bg-red-600 hover:text-white rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="deleteModal{{ $post->id_post }}">
-                                       <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                       </svg>
-                                       <span class="sr-only">Close modal</span>
-                                    </button>
 
-                                    <!-- Konfirmasi Penghapusan -->
-                                    <div class="p-4 md:p-5 text-center">
-                                       <h3 class="mb-5 text-lg font-normal text-gray-900">Are you sure you want to delete this post?</h3>
+                <div id="postsContainer" class="bg-white p-4 rounded-lg shadow mb-8 relative">
+                    <h2 class="text-2xl font-bold text-red-700 mb-4">Activity Feed</h2>
+                    <!-- Posts will be appended here -->
+                </div>
 
-                                       <form action="{{ route('posts.destroy', $post->id_post) }}" method="POST">
-                                             @csrf
-                                             @method('DELETE')
-                                             <button type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                                                Yes, delete it
-                                             </button>
-                                       </form>
-                                       <!-- Tombol No -->
-                                       <button data-modal-hide="deleteModal{{ $post->id_post }}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-blue-500 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700">
-                                          No, cancel
-                                       </button>
+                <script>
+                    const baseURL = 'http://127.0.0.1:8000/api';
+                    const token = localStorage.getItem('auth_token');
+
+                    document.getElementById('createPostBtn').addEventListener('click', () => {
+                    const form = document.getElementById('postForm');
+                    form.classList.toggle('hidden'); // toggle form muncul/sesuai saat tombol diklik
+                    });
+
+                    async function fetchPosts() {
+                    const response = await fetch(`${baseURL}/posts`, {
+                        headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                        }
+                    });
+
+                    if (!response.ok) {
+                        alert('Gagal memuat posts');
+                        return;
+                    }
+
+                    const posts = await response.json();
+                    displayPosts(posts);
+                    }
+
+                    function displayPosts(posts) {
+                        const container = document.getElementById('postsContainer');
+                        container.innerHTML = '<h2 class="text-2xl font-bold text-red-700 mb-4">Activity Feed</h2>';
+                        
+                        const currentUserId = localStorage.getItem('user_id'); // Ambil user_id dari localStorage
+                        
+                        posts.forEach(post => {
+                            // Cek apakah user yang login sama dengan user pemilik postingan
+                            const canEdit = post.user && (post.user.user_id.toString() === currentUserId);
+                            
+                            const postEl = document.createElement('div');
+                            postEl.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow', 'mb-4', 'relative');
+                            postEl.innerHTML = `
+                                <div class="absolute top-2 right-2">
+                                    ${canEdit ? `
+                                        <button class="text-blue-500 hover:text-blue-700 font-semibold mr-2" onclick="editPost(${post.id_post})">Edit</button>
+                                        <button class="text-red-500 hover:text-red-700 font-semibold" onclick="deletePost(${post.id_post})">Delete</button>
+                                    ` : ''}
+                                </div>
+                                <div class="flex items-center mb-4">
+                                    <img alt="User Profile" class="rounded-full w-12 h-12" src="https://hackspirit.com/wp-content/uploads/2021/06/Copy-of-Rustic-Female-Teen-Magazine-Cover.jpg" />
+                                    <div class="ml-3">
+                                        <p class="font-bold">${post.user ? post.user.username : 'Unknown'}</p>
+                                        <p class="text-gray-500 text-sm">${new Date(post.created_at).toLocaleString()}</p>
                                     </div>
-                                 </div>
-                              </div>
-                 
-                             <div class="flex items-center mb-4">
-                                 <img alt="User Profile" class="rounded-full w-12 h-12" src="https://hackspirit.com/wp-content/uploads/2021/06/Copy-of-Rustic-Female-Teen-Magazine-Cover.jpg" />
-                                 <div class="ml-3">
-                                     <p class="font-bold">Fadil</p>
-                                     <p class="text-gray-500 text-sm">{{ \Carbon\Carbon::parse($post->created_at)->format('d M Y h:i A') }}</p>
-                                 </div>
-                             </div>
-                             <h3>{{ $post->post_title }}</h3>
-                             <p class="mb-4">{{ $post->post_content }}</p>
-                             @if($post->post_image)
-                                 <img src="{{ asset('storage/' . $post->post_image) }}" alt="Post Image" class="w-full h-64 bg-cover bg-center rounded-lg mb-4 cursor-pointer">
-                             @endif
-                             <div class="flex space-x-4">
-                                 <button class="flex items-center text-gray-500 hover:text-red-500">
-                                     <i class="fi fi-rs-heart mr-1"></i> Like
-                                 </button>
-                                 <button class="flex items-center text-gray-500 hover:text-green-500">
-                                     <i class="fi fi-rs-comment-alt mr-1"></i> Comment
-                                 </button>
-                             </div>
-                         </div>
-                     @endforeach
-                 </div>   
+                                </div>
+                                <h3>${post.post_title}</h3>
+                                <p class="mb-4">${post.post_content}</p>
+                                ${post.post_image ? `<img src="http://127.0.0.1:8000/storage/${post.post_image}" alt="Post Image" class="w-full h-64 bg-cover bg-center rounded-lg mb-4 cursor-pointer" />` : ''}
+                            `;
+                            container.appendChild(postEl);
+                        });
+                    }
+
+                    function editPost(id_post) {
+                        window.location.href = `/posts/${id_post}/edit`; // Arahkan ke halaman edit
+                    }
+
+                    async function deletePost(id_post) {
+                        if (!confirm('Are you sure you want to delete this post?')) return;
+
+                        const token = localStorage.getItem('auth_token');
+
+                        const response = await fetch(`${baseURL}/posts/${id_post}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Accept': 'application/json',
+                            }
+                        });
+
+                        if (response.ok) {
+                            alert('Post deleted');
+                            fetchPosts(); // Refresh daftar post
+                        } else {
+                            const err = await response.json();
+                            alert('Failed to delete post: ' + (err.message || 'Unknown error'));
+                        }
+                    }
+
+
+
+                    // Submit post baru
+                    document.getElementById('createPostForm').addEventListener('submit', async e => {
+                        e.preventDefault();
+
+                        const form = document.getElementById('createPostForm');
+                        const formData = new FormData(form); // otomatis ambil semua field termasuk file
+
+                        const response = await fetch(`${baseURL}/posts`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Accept': 'application/json',
+                                // Jangan set Content-Type, biarkan browser yang atur otomatis
+                            },
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            alert('Postingan berhasil dibuat!');
+                            form.reset();
+                            document.getElementById('postForm').classList.add('hidden');
+                            fetchPosts(); // refresh list post
+                        } else {
+                            const err = await response.json();
+                            alert('Gagal membuat postingan: ' + (err.message || 'Error tidak diketahui'));
+                        }
+                    });
+
+                    // Initial load
+                    fetchPosts();
+                </script>
           </div>  
         </div>
     </main>

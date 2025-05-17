@@ -18,7 +18,6 @@ class CreateKomunitasTable extends Migration
             $table->text('deskripsi')->nullable()->change();
             $table->string('foto');
             $table->string('sampul');
-            $table->string('status');
             $table->unsignedBigInteger('user_id');
             $table->enum('status', ['aktif', 'tidak_aktif'])->default('aktif');  // Kolom status
             $table->timestamps();
