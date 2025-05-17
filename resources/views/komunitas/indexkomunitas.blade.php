@@ -302,6 +302,7 @@
                      <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
                            <p>0/{{ $item->max_members }}</p>
                            <i class="fas fa-user"></i>
+                           <p>aktif</p>
                      </div>
                   <!-- </a> -->
 

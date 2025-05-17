@@ -34,7 +34,8 @@ class KomunitasController extends Controller
             'deskripsi' => 'required|string',
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'sampul' => 'required|image|mimes:jpg,jpeg,png|max:4096',
-            
+            'deskripsi' => 'required|string',
+            'status' => 'required|string',
         ]);
 
         // Upload file
@@ -52,9 +53,10 @@ class KomunitasController extends Controller
             'deskripsi' => $validated['deskripsi'],
             'foto' => $fotoPath,  // path disimpan di DB
             'sampul' => $sampulPath,
+            'status' => $status,
             'user_id' => auth()->id(),
         ]);
-        dd($komunitas);
+        
         return redirect()->route('komunitas.index')->with('success', 'Komunitas berhasil dibuat!');
     }
 
