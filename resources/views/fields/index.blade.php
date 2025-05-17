@@ -38,11 +38,17 @@
             <p class="text-gray-500 italic">{{ $field['sport_type'] }}</p>
             <p class="text-sm text-gray-700 mt-2">{{ $field['description'] }}</p>
             <p class="mt-2 font-semibold">Rp{{ number_format($field['price'], 0, ',', '.') }}</p>
+    
+            @if(!empty($field['image']))
+                <div class="mt-4">
+                    <img src="{{ asset('storage/' . $field['image']) }}" alt="Foto Lapangan" class="w-full h-48 object-cover rounded">
+                </div>
+            @endif
+            
             <div class="flex gap-3 mt-4">
                 <a href="{{ route('fields.show', $index) }}" class="text-blue-500 hover:underline">Lihat</a>
                 <a href="{{ route('fields.edit', $index) }}" class="text-yellow-500 hover:underline">Edit</a>
-                <form action="{{ route('fields.destroy', $index) }}" method="POST"
-                    onsubmit="return confirm('Yakin ingin menghapus?')">
+                <form action="{{ route('fields.destroy', $index) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="text-red-500 hover:underline">Hapus</button>
@@ -50,7 +56,7 @@
             </div>
         </div>
         @endforeach
-    </div>
+    </div>    
     @else
     <p class="text-gray-600">Belum ada data lapangan.</p>
     @endif

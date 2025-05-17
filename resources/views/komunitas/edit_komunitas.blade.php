@@ -102,6 +102,7 @@
                         </div>
 
                         <div class="mb-3">
+<<<<<<< HEAD
                             <label class="block text-gray-700 font-bold">Description:</label>
                             <textarea name="deskripsi" class="w-full border border-red-600 rounded p-2 h-24" required>{{ $komunitas->deskripsi }}</textarea>
                         </div>
@@ -113,6 +114,18 @@
                                 <option value="tidak aktif">Tidak Aktif</option>
                             </select>
                         </div>
+=======
+                           <label class="block text-gray-700 font-bold">Description:</label>
+                           <textarea name="deskripsi" class="w-full border border-red-600 rounded p-2 h-24" required>{{ old('deskripsi', $komunitas->deskripsi) }}</textarea>
+                       </div>  
+                       <div class="mb-4">
+                        <label for="status" class="block font-medium text-gray-700">Status Komunitas</label>
+                        <select name="status" id="status" class="w-full border-gray-300 rounded-lg px-4 py-2">
+                            <option value="aktif" {{ old('status', $komunitas->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="tidak_aktif" {{ old('status', $komunitas->status) == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                        </select>
+                    </div>                     
+>>>>>>> fab00af908393bb5ec256037ac5e3bb2509cb36a
                     </div>
                 </div>
 
