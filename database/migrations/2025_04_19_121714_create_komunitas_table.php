@@ -15,11 +15,12 @@ class CreateKomunitasTable extends Migration
             $table->integer('max_members');
             $table->string('provinsi');
             $table->string('kota');
-            $table->text('deskripsi')->nullable()->change();;
+            $table->text('deskripsi')->nullable()->change();
             $table->string('foto');
             $table->string('sampul');
             $table->unsignedBigInteger('user_id');
-            $table->timestamps();  // Menambahkan kolom created_at dan updated_at
+            $table->enum('status', ['aktif', 'tidak_aktif'])->default('aktif');  // Kolom status
+            $table->timestamps();
             $table->foreign('user_id')->references('user_id')->on('users');
         });
     }

@@ -33,6 +33,7 @@ class KomunitasController extends Controller
             'deskripsi' => 'required|string',
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'sampul' => 'required|image|mimes:jpg,jpeg,png|max:4096',
+            'status' => $request->status ?? 'aktif',  // Menambahkan status
         ]);
 
         // Upload file
@@ -113,6 +114,7 @@ class KomunitasController extends Controller
             'deskripsi' => $request->deskripsi, // Pastikan ini adalah nama kolom yang tepat
             'foto' => $request->hasFile('foto') ? $request->file('foto')->store('komunitas/foto') : $komunitas->foto,
             'sampul' => $request->hasFile('sampul') ? $request->file('sampul')->store('komunitas/sampul') : $komunitas->sampul,
+            'status' => $request->status ?? $komunitas->status,  // Menambahkan status
         ]);
 
         // Redirect setelah sukses update

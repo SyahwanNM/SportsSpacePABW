@@ -45,26 +45,29 @@
                <!-- Card 1 -->
                @foreach ($komunitas as $item)
                <div class="bg-white shadow-lg rounded-lg p-4 m-1 w-45 hover:bg-gray-300 flex-shrink-0 relative">
-                  <!-- <a href="{{ route('komunitas.show', $item->id_kmnts) }}"> -->
-                     <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
-                     <h4 class="font-bold text-md">{{ $item->nama }}</h4>
-                     <div class="flex items-center text-sm text-gray-600">
-                           <span>{{ $item->jns_olahraga }}</span>
-                     </div>
-                     <p class="text-sm text-gray-500">{{ $item->kota }}</p>
-                     <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-                           <p>0/{{ $item->max_members }}</p>
-                           <i class="fas fa-user"></i>
-                     </div>
-                  <!-- </a> -->
+                  <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
+                  <h4 class="font-bold text-md">{{ $item->nama }}</h4>
+                  <div class="flex items-center text-sm text-gray-600">
+                     <span>{{ $item->jns_olahraga }}</span>
+                  </div>
+                  <p class="text-sm text-gray-500">{{ $item->kota }}</p>
+                  <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
+                     <p>0/{{ $item->max_members }}</p>
+                     <i class="fas fa-user"></i>
+                  </div>
 
-                  <!-- Tombol Edit kecil -->
+                  <!-- Menambahkan status komunitas -->
+                  <div class="mt-2">
+                     <span class="text-sm {{ $item->status == 'aktif' ? 'text-green-600' : 'text-red-600' }}">
+                           {{ ucfirst($item->status) }}
+                     </span>
+                  </div>
+
                   <a href="{{ route('komunitas.edit', $item->id_kmnts)}}" class="absolute top-2 right-2 text-sm text-blue-500 hover:text-blue-700">
                      <i class="fas fa-edit"></i> Edit
                   </a>
                </div>
-
-                @endforeach
+               @endforeach
             </div>
             
             <h2 class="text-2xl font-bold text-red-700 mb-2 mt-4">Community in Your City</h2>

@@ -22,7 +22,9 @@ class Komunitas extends Model
         'foto',
         'sampul',
         'user_id',
+        'status',  // Menambahkan kolom status
     ];
+    
 
     public function user()
     {
