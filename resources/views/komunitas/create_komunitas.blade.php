@@ -103,9 +103,17 @@
                         </div>
 
                         <div class="mb-3">
-                           <label class="block text-gray-700 font-bold">Description:</label>
-                           <textarea name="deskripsi" class="w-full border border-red-600 rounded p-2 h-24" required>{{ old('deskripsi') }}</textarea>
-                       </div>
+                            <label class="block text-gray-700 font-bold">Description:</label>
+                            <textarea name="deskripsi" class="w-full border border-red-600 rounded p-2 h-24" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="block text-gray-700 font-bold">status</label>
+                            <select name="status" class="w-full border border-red-600 rounded-xl h-8 p-1" required>
+                                <option value="" disabled selected>pilih status</option>
+                                <option value="aktif">Aktif</option>
+                                <option value="tidak aktif">Tidak Aktif</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 

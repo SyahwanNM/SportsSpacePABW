@@ -18,6 +18,7 @@ class CreateKomunitasTable extends Migration
             $table->text('deskripsi')->nullable()->change();;
             $table->string('foto');
             $table->string('sampul');
+            $table->string('status');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();  // Menambahkan kolom created_at dan updated_at
             $table->foreign('user_id')->references('user_id')->on('users');

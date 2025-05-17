@@ -21,6 +21,7 @@ class Komunitas extends Model
         'deskripsi',
         'foto',
         'sampul',
+        'status',
         'user_id',
     ];
 
