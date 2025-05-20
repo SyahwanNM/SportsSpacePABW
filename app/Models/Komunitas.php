@@ -23,7 +23,6 @@ class Komunitas extends Model
         'sampul',
         'status',
         'user_id',
-        'status',  // Menambahkan kolom status
     ];
     
 

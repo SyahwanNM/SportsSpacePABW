@@ -33,12 +33,7 @@ class KomunitasController extends Controller
             'deskripsi' => 'required|string',
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'sampul' => 'required|image|mimes:jpg,jpeg,png|max:4096',
-<<<<<<< HEAD
-            'deskripsi' => 'required|string',
-            'status' => 'required|string',
-=======
             'status' => $request->status ?? 'aktif',  // Menambahkan status
->>>>>>> fab00af908393bb5ec256037ac5e3bb2509cb36a
         ]);
 
         // Upload file

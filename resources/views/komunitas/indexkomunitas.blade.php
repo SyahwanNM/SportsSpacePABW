@@ -64,17 +64,7 @@
                   </div>
 
                   <!-- <a href="{{ route('komunitas.show', $item->id_kmnts) }}"> -->
-                     <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}" class="rounded-lg mb-3 w-32 h-32 border-2 border-gray-300">
-                     <h4 class="font-bold text-md">{{ $item->nama }}</h4>
-                     <div class="flex items-center text-sm text-gray-600">
-                           <span>{{ $item->jns_olahraga }}</span>
-                     </div>
-                     <p class="text-sm text-gray-500">{{ $item->kota }}</p>
-                     <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-                           <p>0/{{ $item->max_members }}</p>
-                           <i class="fas fa-user"></i>
-                           <p>aktif</p>
-                     </div>
+                     
                   <!-- </a> -->
 
                   <!-- Tombol Edit kecil -->

@@ -31,4 +31,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function komunitas()
+    {
+        return $this->hasMany(Komunitas::class, 'user_id');
+    }
 }

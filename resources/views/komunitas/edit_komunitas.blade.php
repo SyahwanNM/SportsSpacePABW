@@ -102,19 +102,6 @@
                         </div>
 
                         <div class="mb-3">
-<<<<<<< HEAD
-                            <label class="block text-gray-700 font-bold">Description:</label>
-                            <textarea name="deskripsi" class="w-full border border-red-600 rounded p-2 h-24" required>{{ $komunitas->deskripsi }}</textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-gray-700 font-bold">status</label>
-                            <select name="status" class="w-full border border-red-600 rounded-xl h-8 p-1" required>
-                                <option value="" disabled selected>pilih status</option>
-                                <option value="aktif">Aktif</option>
-                                <option value="tidak aktif">Tidak Aktif</option>
-                            </select>
-                        </div>
-=======
                            <label class="block text-gray-700 font-bold">Description:</label>
                            <textarea name="deskripsi" class="w-full border border-red-600 rounded p-2 h-24" required>{{ old('deskripsi', $komunitas->deskripsi) }}</textarea>
                        </div>  
@@ -125,7 +112,6 @@
                             <option value="tidak_aktif" {{ old('status', $komunitas->status) == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                         </select>
                     </div>                     
->>>>>>> fab00af908393bb5ec256037ac5e3bb2509cb36a
                     </div>
                 </div>
 

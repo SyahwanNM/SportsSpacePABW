@@ -12,7 +12,6 @@ class Lapangan extends Model
     protected $table = 'lapangans';
 
     protected $fillable = [
-        'id_field',
         'nama_lapangan',
         'type',
         'categori',
@@ -23,6 +22,11 @@ class Lapangan extends Model
         'fasility',
         'price',
         'description',
-        'address',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 }
