@@ -13,7 +13,6 @@
 
 
 <!-- commit pertama di branch -->
-</head>
 <style>
    body {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -25,7 +24,6 @@
     transform: translateX(-100px);
   }
 </style>
-</head>
 
 <body class="bg-gray-100 min-h-screen">
 
@@ -165,9 +163,8 @@
                      });
                   </script>
                   <li>
-                     <a href="/profile/profile.html" class="flex items-center p-2 text-sm text-black rounded-lg hover:bg-red-700 hover:text-white group">
-                        <i class="fi fi-rs-user">
-                        </i>
+                     <a href="{{ route('profile.show') }}" class="flex items-center p-2 text-sm text-black rounded-lg hover:bg-red-700 hover:text-white group">
+                        <i class="fi fi-rs-user"></i>
                         <span class="flex-1 ms-3 whitespace-nowrap">Profile</span>
                      </a>
                   </li>

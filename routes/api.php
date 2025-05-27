@@ -6,6 +6,7 @@
     use App\Http\Controllers\Api\PostController;
     use App\Http\Controllers\Api\KomunitasController;
     use App\Http\Controllers\Api\LapanganController;
+    use App\Http\Controllers\Api\UserProfileController;
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -18,4 +19,6 @@
         Route::get('/user', function (Request $request) {
             return $request->user()->only(['user_id', 'username', 'email', 'nama_user', 'tanggal_lahir', 'gender', 'kota', 'role']);
         });
+        Route::middleware('auth:sanctum')->get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
+        Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
     });

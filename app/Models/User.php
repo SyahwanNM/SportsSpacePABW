@@ -25,6 +25,7 @@ class User extends Authenticatable
         'kota',
         'role',
         'total_poin',
+        'photo',
     ];
 
     protected $hidden = [
