@@ -17,8 +17,18 @@
         Route::apiResource('komunitas', KomunitasController::class);
         Route::apiResource('lapangans', LapanganController::class);
         Route::get('/user', function (Request $request) {
-            return $request->user()->only(['user_id', 'username', 'email', 'nama_user', 'tanggal_lahir', 'gender', 'kota', 'role']);
+            $user = $request->user();
+            $userData = $user->only(['user_id', 'username', 'email', 'nama_user', 'tanggal_lahir', 'gender', 'kota', 'role', 'photo']);
+            
+            // Generate full URL for photo if it exists
+            if ($userData['photo'] && $userData['photo'] !== 'null' && $userData['photo'] !== '') {
+                if (!str_starts_with($userData['photo'], 'http')) {
+                    $userData['photo'] = asset($userData['photo']);
+                }
+            }
+            
+            return $userData;
         });
-        Route::middleware('auth:sanctum')->get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile', [UserProfileController::class, 'index'])->name('profile.index');
         Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
     });

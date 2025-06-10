@@ -12,8 +12,21 @@ class PostController extends Controller
     // Semua postingan bisa dilihat siapa saja yang login
     public function index()
     {
-        // Mengambil post beserta relasi user-nya
-        $posts = Post::with('user')->orderBy('created_at', 'desc')->get();
+        // Mengambil post beserta relasi user-nya dan memastikan photo user dimasukkan
+        $posts = Post::with(['user' => function($query) {
+            $query->select('user_id', 'username', 'photo');
+        }])->orderBy('created_at', 'desc')->get();
+        
+        // Generate full URL for user photos
+        $posts->transform(function ($post) {
+            if ($post->user && $post->user->photo) {
+                if (!str_starts_with($post->user->photo, 'http')) {
+                    $post->user->photo = asset($post->user->photo);
+                }
+            }
+            return $post;
+        });
+        
         return response()->json($posts);
     }
 

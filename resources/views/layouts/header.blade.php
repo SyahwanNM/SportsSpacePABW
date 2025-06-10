@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Sports Space</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
@@ -38,7 +39,7 @@
             </button>
             <a href="#" class="flex ms-2 md:me-24">
             <img src="/images/logo.png" class="h-10 me-3" alt="FlowBite Logo" />
-            <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">SportsSpace</span>
+            <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">SportsSpace</span>
             </a>
          </div>
          
@@ -63,7 +64,7 @@
                 <h3 class="text-lg font-semibold text-gray-900">
                   Notification
                 </h3>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crypto-modal">
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crypto-modal">
                   <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                   </svg>
@@ -71,7 +72,7 @@
                 </button>
               </div>
               <div class="p-4 md:p-5">
-                <p class="text-sm font-normal text-gray-500 dark:text-gray-400">Latest notification.</p>
+                <p class="text-sm font-normal text-gray-500">Latest notification.</p>
                 <ul>
                   <li class="flex items-center mb-2 hover:bg-gray-100 p-2 rounded-lg">
                      <img alt="Friend 1" class="rounded-full mr-2" height="30" src="https://storage.googleapis.com/a1aa/image/oDJoEMVqSvYhGBkeGM3OOYudbjHWHZwNX96KKC7DZwRfiF1TA.jpg" width="30"/>
@@ -97,7 +98,7 @@
       
                </ul>
                 <div>
-                  <a href="#" class="inline-flex items-center text-xs font-normal text-gray-500 hover:underline dark:text-gray-400">
+                  <a href="#" class="inline-flex items-center text-xs font-normal text-gray-500 hover:underline">
                     <svg class="w-3 h-3 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                     </svg>
@@ -125,7 +126,7 @@
                <div>
                   <button type="button" class="flex text-sm bg-white rounded-full focus:ring-4 focus:ring-red-500" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                   <span class="sr-only">Open user menu</span>
-                  <img class="w-10 h-10 rounded-full" src="https://hackspirit.com/wp-content/uploads/2021/06/Copy-of-Rustic-Female-Teen-Magazine-Cover.jpg" alt="user photo">
+                  <img id="headerProfileImage" class="w-10 h-10 rounded-full" src="{{ asset('storage/profile/default-profile.jpg') }}" alt="user photo">
                   </button>
                </div>
                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y" id="dropdown-user">
@@ -141,11 +142,31 @@
                            return window.location.href = "{{ route('login') }}";
                         }
 
+                        // Function to update profile image
+                        function updateProfileImage(photoUrl) {
+                           const headerImage = document.getElementById('headerProfileImage');
+                           if (photoUrl && photoUrl !== 'null' && photoUrl !== '') {
+                              // Add timestamp to prevent caching
+                              const timestamp = new Date().getTime();
+                              const imageUrl = photoUrl.startsWith('http') ? photoUrl : `{{ asset('') }}${photoUrl}`;
+                              headerImage.src = `${imageUrl}?t=${timestamp}`;
+                              
+                              // Add error handling for image loading
+                              headerImage.onerror = function() {
+                                 console.error('Error loading profile image:', imageUrl);
+                                 this.src = "{{ asset('storage/profile/default-profile.jpg') }}";
+                              };
+                           } else {
+                              headerImage.src = "{{ asset('storage/profile/default-profile.jpg') }}";
+                           }
+                        }
+
                         // 1. Ambil data user dan isi header
                         fetch('/api/user', {
                            headers: {
-                           'Authorization': `Bearer ${token}`,
-                           'Accept': 'application/json'
+                              'Authorization': `Bearer ${token}`,
+                              'Accept': 'application/json',
+                              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                            }
                         })
                         .then(res => {
@@ -153,9 +174,20 @@
                            return res.json();
                         })
                         .then(user => {
-                           document.getElementById('userName').textContent  = user.nama_user || user.username;
+                           document.getElementById('userName').textContent = user.nama_user || user.username;
                            document.getElementById('userEmail').textContent = user.email;
-                           // Kalau ada avatar: document.querySelector('#dropdown-user img').src = user.avatar_url;
+                           
+                           // Update profile image
+                           if (user.photo) {
+                              updateProfileImage(user.photo);
+                           }
+
+                           // Listen for profile updates
+                           window.addEventListener('profileUpdated', function(e) {
+                              if (e.detail && e.detail.photo) {
+                                 updateProfileImage(e.detail.photo);
+                              }
+                           });
                         })
                         .catch(() => {
                            // Token invalid atau expired
@@ -190,7 +222,7 @@
                <div id="logout-modal" tabindex="-1" class="hidden …">
                   <div class="…">
                      <div class="…">
-                        <!-- Tombol Close “×” -->
+                        <!-- Tombol Close "×" -->
                         <button type="button" data-modal-hide="logout-modal">×</button>
                         <div class="p-4 text-center">
                         <h3>Are you sure you want to log out?</h3>
@@ -225,7 +257,8 @@
                         method: 'POST',
                         headers: {
                            'Authorization': `Bearer ${token}`,
-                           'Accept': 'application/json'
+                           'Accept': 'application/json',
+                           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
                         });
                      } catch (e) {

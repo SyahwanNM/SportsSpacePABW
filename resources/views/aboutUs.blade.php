@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Sports Space</title>
+  <title>Sports Space - About Us</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
   <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
@@ -46,31 +46,23 @@
   </style>
 </head>
 <body>
-    <nav class="sticky isolate w-full font-normal py-4 mx-auto flex items-center justify-between pr-48 pl-48">
-        <div class="flex items-center justify-between w-full">
-            <div class="nav__logo">
-                <a href="#">
-                    <img src="/images/logo.png" alt="Logo" class="max-w-[150px] h-auto">
-                </a>
-            </div>
-            <div class="text-[1.5rem] text-white cursor-pointer" id="menu-btn">
-                <span><i class="ri-menu-line"></i></span>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{{ route('landingpage') }}" class="flex-shrink-0 flex items-center">
+                        <img class="max-w-[150px] h-auto" src="/images/logo.png" alt="Sports Space">
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ route('aboutus') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About Us</a>
+                    <a href="{{ route('faq') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
+                    <a href="{{ route('register') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sign Up</a>
+                    <a href="{{ route('login') }}" class="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium">Sign In</a>
+                </div>
             </div>
         </div>
-
-        <!-- Menu Links -->
-        <ul class="absolute top-5 left-0 w-full p-4 list-none flex flex-row items-center justify-center gap-8">
-            <li><a href="{{ route('landingpage') }}" class="text-black border-b-4 border-transparent hover:border-red-700 transition duration-300">Home</a></li>
-            <li><a href="aboutus.html" class="text-black border-b-4 border-b border-red-700">About Us</a></li>
-            <li><a href="{{ route('faq') }}" class="text-black border-b-4 border-transparent hover:border-red-700 transition duration-300">Help</a></li>
-        </ul>
-
-        <!-- Buttons -->
-        <ul class="flex flex-1 top-5 p-5 z-20">
-            <li><a href="{{ route('register') }}" class="py-3 px-6 outline-none border-none text-base whitespace-nowrap rounded-[10px] text-black hover:text-[#d60505] bg-transparent transition duration-300">Sign Up</a></li>
-            
-            <li><a href="{{ route('login') }}" class="py-3 px-6 outline-none border-none text-base whitespace-nowrap rounded-[10px] text-white hover:bg-[#b00404] transition duration-300" style="background-color:#d60505;">Sign In</a></li>
-        </ul>
     </nav>
 
     <div class="text-white mt-20" style="background-color:#d60505;">
@@ -197,7 +189,7 @@
         <div class="grid grid-cols-2 gap-80 px-4 py-6 lg:py-8 md:grid-cols-3">
             <div class="flex flex-col items-center">
                 <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">Contact us</h2>
-                <ul class="text-gray-500 dark:text-gray-400 font-medium text-center">
+                <ul class="text-gray-500 font-medium text-center">
                     <li class="mb-4">
                         <a href="#" class="hover:underline">About</a>
                     </li>
@@ -208,7 +200,7 @@
             </div>
             <div class="flex flex-col items-center">
                 <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">Follow Us</h2>
-                <ul class="text-gray-500 dark:text-gray-400 font-medium text-center">
+                <ul class="text-gray-500 font-medium text-center">
                     <li class="mb-4">
                         <a href="#" class="hover:underline">Instagram</a>
                     </li>
@@ -225,7 +217,7 @@
              </div>
             <div class="flex flex-col items-center">
                 <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">Location</h2>
-                <ul class="text-gray-500 dark:text-gray-400 font-medium text-center">
+                <ul class="text-gray-500 font-medium text-center">
                     <li class="mb-4">
                         <a href="#" class="hover:underline">Jl.Majalaya</a>
                     </li>

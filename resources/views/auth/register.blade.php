@@ -1,329 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Sports Space</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
-  <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-  <link rel="stylesheet" href="../landingpage/pageStyle.css">
-</head>
-<style>
-    body {
-       font-family: 'Plus Jakarta Sans', sans-serif;
-    }
- </style>
-<body>
-    <nav class="sticky isolate w-full z-9 font-normal py-4 px-8 mx-auto flex items-center justify-between">
-        <div class="flex items-center justify-between w-full">
-            <div class="nav__logo">
-                <a href="#">
-                    <img src="/images/logo.png" alt="Logo" class="max-w-[150px] h-auto">
-                </a>
-            </div>
-            <div class="text-[1.5rem] text-white cursor-pointer" id="menu-btn">
-                <span><i class="ri-menu-line"></i></span>
-            </div>
+<x-guest-layout>
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
+
+        <!-- Name -->
+        <div>
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
-  
-        <!-- Menu Links -->
-        <ul class="absolute top-5 left-0 w-full p-4 list-none flex flex-row items-center justify-center gap-8">
-            <li><a href="{{ route('landingpage') }}" class="text-black border-b-4 border-transparent hover:border-red-700 transition duration-300">Home</a></li>
-            <li><a href="{{ route('aboutus') }}" class="text-black border-b-4 border-transparent hover:border-red-700 transition duration-300">About Us</a></li>
-            <li><a href="{{ route('faq') }}" class="text-black border-b-4 border-transparent hover:border-red-700 transition duration-300">Help</a></li>
-        </ul>
-  
-        <!-- Buttons -->
-        <div class="flex flex-1 space-x-2 z-20">
-            <a href="/register/registerNew.html" class="py-3 px-6 outline-none border-none text-base whitespace-nowrap rounded-[10px] text-black hover:text-[#d60505] bg-transparent transition duration-300">
-                Sign Up
+
+        <!-- Email Address -->
+        <div class="mt-4">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mt-4">
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                            type="password"
+                            name="password_confirmation" required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+                {{ __('Already registered?') }}
             </a>
-            <a href="{{ route('login') }}" class="py-3 px-6 outline-none border-none text-base whitespace-nowrap rounded-[10px] text-white hover:bg-red-800 transition duration-300" style="background-color:#d60505;">
-                Sign In
-            </a>
+
+            <x-primary-button class="ms-4">
+                {{ __('Register') }}
+            </x-primary-button>
         </div>
-    </nav>
-    <main class="bg-red-700 flex justify-center">
-        <div class="flex justify-center items-center ">
-            <div>
-                <div class="text-white gap-4 mt-2 transform rotate-12">
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>  
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-gym text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-tennis text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-biking-mountain text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-shuttlecock text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-mask-snorkel text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-bowling-pins text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-swimmer text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-ping-pong text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball-hoop text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                </div>
-                <div class="text-white gap-4 mt-2 transform rotate-12">                 
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>  
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-gym text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-tennis text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-biking-mountain text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-shuttlecock text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-mask-snorkel text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-bowling-pins text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-swimmer text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-ping-pong text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball-hoop text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                </div>
-                <div class="text-white gap-4 mt-2 transform rotate-12">                          
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>  
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-gym text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-tennis text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-biking-mountain text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-shuttlecock text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-mask-snorkel text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-bowling-pins text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-swimmer text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-ping-pong text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball-hoop text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                </div>
-                <div class="text-white gap-4 mt-2 transform rotate-12"> 
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-gym text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-tennis text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-biking-mountain text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-shuttlecock text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-mask-snorkel text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-bowling-pins text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-swimmer text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-ping-pong text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball-hoop text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>                                        
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span> 
-                </div>
-                <div class="text-white gap-4 mt-2 transform rotate-12"> 
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-tennis text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-biking-mountain text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-shuttlecock text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-mask-snorkel text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-bowling-pins text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-swimmer text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-ping-pong text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball-hoop text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>                                        
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-gym text-[4rem]"></i></span> 
-                </div>
-                <div class="text-white gap-4 mt-2 transform rotate-12"> 
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-biking-mountain text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-shuttlecock text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-mask-snorkel text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-bowling-pins text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-swimmer text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-ping-pong text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball-hoop text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>                                        
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-gym text-[4rem]"></i></span> 
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-tennis text-[4rem]"></i></span>
-                </div>
-                <div class="text-white gap-4 mt-2 transform rotate-12"> 
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-shuttlecock text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-mask-snorkel text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-bowling-pins text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-swimmer text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-ping-pong text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball-hoop text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-volleyball text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-basketball text-[4rem]"></i></span>                                        
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-running text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-gym text-[4rem]"></i></span> 
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-tennis text-[4rem]"></i></span>
-                    <span class="inline-block w-20 h-20"><i class="fi fi-rs-biking-mountain text-[4rem]"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="mb-16 w-80 p-5 bg-gray-200 rounded-lg z-20 absolute top-52">
-            <p class="text-center mb-3 text-md font-bold">
-                <span>Create Your Account</span>
-            </p>
-            <form id="registerForm" class="space-y-4">
-                <div class="flex">
-                    <input type="email" name="email" id="email" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Your Email" required>
-                </div>
-
-                <div class="flex">
-                    <input type="text" name="username" id="username" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Username" required>
-                </div>
-                <div class="flex">
-                    <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="w-full px-3 py-2 text-sm font-medium border rounded-lg" required>
-                </div>
-
-                <div class="grid-cols-2">
-                    <select name="kota" id="kota" class="px-3 py-2 mr-3 rounded-lg" required>
-                        <option class="text-gray-300" value="" disabled selected>Your City</option>
-                        <option value="bandung">Bandung</option>
-                        <option value="jakarta">Jakarta</option>
-                        <option value="surabaya">Surabaya</option>
-                        <option value="yogyakarta">Yogyakarta</option>
-                        <option value="medan">Medan</option>
-                        <option value="makassar">Makassar</option>
-                        <option value="denpasar">Denpasar</option>
-                    </select>
-                    <select name="gender" id="gender" class="px-4 py-2 rounded-lg" required>
-                        <option value="" disabled selected>Gender</option>
-                        <option value="Laki laki">Male</option>
-                        <option value="Perempuan">Female</option>
-                    </select>
-                </div>
-
-                <div class="flex">
-                    <input type="password" name="password" id="password" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Password" required>
-                </div>
-
-                <div class="flex">
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="w-full px-3 py-2 text-sm font-medium border rounded-lg focus:outline-none focus:border-gray-400" placeholder="Confirm Password" required>
-                </div>
-
-                <button type="submit" class="w-full py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-100">
-                    Sign Up
-                </button>
-            </form>
-
-            <script>
-            document.getElementById('registerForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const rawDate = document.getElementById('tanggal_lahir').value; // biasanya dalam format mm/dd/yyyy (tergantung browser)
-                const dateObj = new Date(rawDate);
-
-                // Membuat format yyyy-mm-dd
-                const formattedDate = dateObj.getFullYear() + '-' +
-                String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
-                String(dateObj.getDate()).padStart(2, '0');
-
-                const data = {
-                    email: document.getElementById('email').value,
-                    username: document.getElementById('username').value,
-                    tanggal_lahir: formattedDate,
-                    kota: document.getElementById('kota').value,
-                    gender: document.getElementById('gender').value,
-                    password: document.getElementById('password').value,
-                    password_confirmation: document.getElementById('password_confirmation').value,
-                };
-
-
-                // Jika ada field wajib lain seperti nama_user dan tanggal_lahir, tambahkan input dan ambil nilainya
-
-                try {
-                    const response = await fetch('/api/register', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            // Jika pakai CSRF token, bisa ditambahkan di sini
-                        },
-                        body: JSON.stringify(data),
-                    });
-
-                    const result = await response.json();
-                    
-                    if (response.ok) {
-                        alert('Registration successful! Please login.');
-                        window.location.href = "{{ route('login') }}"; // arahkan ke halaman login
-                    } else {
-                        // Tampilkan error dari API
-                        let messages = '';
-                        if(result.errors) {
-                            for(const key in result.errors) {
-                                messages += `${result.errors[key].join(', ')}\n`;
-                            }
-                        } else if(result.message) {
-                            messages = result.message;
-                        }
-                        alert('Registration failed:\n' + messages);
-                    }
-                } catch (error) {
-                    alert('Error submitting form');
-                    console.error(error);
-                }
-            });
-            </script>
-            <hr class="my-2">
-
-            <p class="text-center text-sm font-medium">
-                Already Have an Account? <a href="../login/loginNew.html" class="text-blue-500 hover:underline">Sign In</a>
-            </p>
-        </div>  
-    </main>
-</body>
-<footer class="bg-white">
-    <div class="mx-auto w-full max-w-screen-xl flex flex-col items-center">
-        <div class="grid grid-cols-2 gap-80 px-4 py-6 lg:py-8 md:grid-cols-3">
-            <div class="flex flex-col items-center">
-                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">Contact us</h2>
-                <ul class="text-gray-500 dark:text-gray-400 font-medium text-center">
-                    <li class="mb-4">
-                        <a href="#" class="hover:underline">About</a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="#" class="hover:underline">Careers</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="flex flex-col items-center">
-                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase">Follow Us</h2>
-                <ul class="text-gray-500 dark:text-gray-400 font-medium text-center">
-                    <li class="mb-4">
-                        <a href="#" class="hover:underline">Instagram</a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="#" class="hover:underline">Twitter</a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="#" class="hover:underline">Facebook</a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="#" class="hover:underline">Contact Us</a>
-                    </li>
-                </ul>
-             </div>
-            <div class="flex flex-col items-center">
-                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase z-10">Location</h2>
-                <ul class="text-gray-500 dark:text-gray-400 font-medium text-center">
-                    <li class="mb-4">
-                        <a href="#" class="hover:underline">Jl.Majalaya</a>
-                    </li>
-                </ul>
-          </div>
-        </div>
-    </div>
-</footer>
-</html>
+    </form>
+</x-guest-layout>

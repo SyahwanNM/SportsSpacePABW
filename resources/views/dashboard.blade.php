@@ -1,282 +1,207 @@
-@extends('layouts.sidebar')
-@extends('layouts.header')
-@extends('layouts.footer')
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Sports Space</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
-  <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-    
-
-
-<!-- commit pertama di branch -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Space - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        .sidebar-item:hover {
+            background-color: rgba(220, 5, 5, 0.1);
+        }
+        .sidebar-item.active {
+            background-color: rgba(220, 5, 5, 0.1);
+            border-left: 4px solid #d60505;
+        }
+        .post-card {
+            transition: all 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
-<style>
-     #logo-sidebar {
-    width: 250px; /* Sesuaikan dengan lebar sidebar yang diinginkan */
-    transition: transform 0.3s ease-in-out;
-}
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <a href="{{ route('dashboard') }}" class="flex items-center">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8">
+                </a>
+            </div>
 
-@media (max-width: 768px) {
-    #logo-sidebar {
-        width: 200px; /* Sesuaikan ukuran sidebar di perangkat mobile */
-    }
-}
-   body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-   }
-   
-  #crypto-modal {
-    max-width: 300px;
-    margin-top: 10px;
-    transform: translateX(-100px);
-  }
-  
-</style>
-@section('content')
-<body class="bg-gray-100">
-    <main class="py-16 pr-16">
-        <div class="flex justify-end">
-            <!-- Main Content -->
-            <div class="lg:w-4/5 md:w-4/5 p-4">
-                <!-- Banner -->
-                <div class="flex mb-4">
-                <div id="default-carousel" class="relative w-full" data-carousel="slide">
-                    <!-- Carousel wrapper -->
-                    <div class="relative h-60 overflow-hidden md:h-75">
-                        <!-- Item 1 -->
-                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                            <img src="https://storage.googleapis.com/a1aa/image/IL9ae7agdAzJXaRDqzdksZzOWFz6IfpUxqdSfYoJUE0xFLqnA.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                        </div>
-                        <!-- Item 2 -->
-                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                            <img src="/images/basketball-court.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                        </div>
-                        <!-- Item 3 -->
-                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                            <img src="/images/indoors-tennis-court.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                        </div>
-                        <!-- Item 4 -->
-                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                            <img src="/images/runway-stadium.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                        </div>
-                        <!-- Item 5 -->
-                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                            <img src="/images/futsal-yogya1.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                        </div>
-                    </div>
-                    <!-- Slider indicators -->
-                    <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-                        <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-                        <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-                        <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-                        <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-                        <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
-                    </div>
-                    <!-- Slider controls -->
-                    <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                            <svg class="w-4 h-4 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                            </svg>
-                        </span>
-                    </button>
-                    <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                            <svg class="w-4 h-4 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                            </svg>
-                        </span>
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-2xl mx-8">
+                <div class="relative">
+                    <input type="text" placeholder="Search posts, events, or users..." 
+                           class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-red-500">
+                    <button class="absolute right-3 top-2.5">
+                        <i class="ri-search-line text-gray-400"></i>
                     </button>
                 </div>
-                <div class="w-1/3 h-60 bg-red-700 text-white flex items-center justify-center">
-                    <div class="text-center">
-                        <p class="text-xl font-bold">MAKE YOUR FUN</p>
-                        <p class="text-4xl font-bold">DOING SPORTS</p>
-                        <p class="text-sm">ANYWHERE YOU WANT</p>
-                    </div>
-                </div>
-                </div>
-                <!-- Weekly Activity -->
-                <div class="bg-white p-4 rounded-lg shadow mb-4">
-                <h2 class="text-2xl font-bold text-red-700 mb-2">Weekly Activity</h2>
-                <p class="text-gray-500 mb-4">Activity Feed</p>
-                <button id="createPostBtn" class="text-blue-500 flex items-center hover:text-blue-700">
-                    Buat Postingan
-                    <i class="fas fa-plus ml-2"></i>
+            </div>
+
+            <!-- User Profile -->
+            <div class="flex items-center space-x-4">
+                <!-- Notifications -->
+                <button class="relative p-2 text-gray-600 hover:text-red-600 transition-colors">
+                    <i class="ri-notification-3-line text-xl"></i>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-600 rounded-full"></span>
                 </button>
 
-                <div id="postForm" class="hidden mt-4">
-                    <form id="createPostForm" class="bg-gray-100 p-4 rounded-lg shadow" enctype="multipart/form-data">
-                        <div class="mb-4">
-                            <label for="post_title" class="block text-sm font-medium text-gray-700">Judul</label>
-                            <input type="text" id="post_title" name="post_title" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="post_content" class="block text-sm font-medium text-gray-700">Konten</label>
-                            <textarea id="post_content" name="post_content" rows="4" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required></textarea>
-                        </div>
-                        <div class="mb-4">
-                            <label for="post_image" class="block text-sm font-medium text-gray-700">Upload Gambar</label>
-                            <input type="file" id="post_image" name="post_image" accept="image/*" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                        </div>
+                <!-- Messages -->
+                <button class="relative p-2 text-gray-600 hover:text-red-600 transition-colors">
+                    <i class="ri-message-3-line text-xl"></i>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-600 rounded-full"></span>
+                </button>
 
-                        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Submit</button>
-                    </form>
+                <!-- Profile Dropdown -->
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
+                        @if(auth()->user()->profile_photo_path)
+                            <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" 
+                                 alt="{{ auth()->user()->name }}" 
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-red-500">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=fff&background=d60505" 
+                                 alt="{{ auth()->user()->name }}" 
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-red-500">
+                        @endif
+                        <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
+                        <i class="ri-arrow-down-s-line text-gray-400"></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div x-show="open" @click.away="open = false" 
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="ri-user-line mr-2"></i> Profile
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="ri-settings-3-line mr-2"></i> Settings
+                        </a>
+                        <hr class="my-2">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                <i class="ri-logout-box-line mr-2"></i> Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
-
-                <div id="postsContainer" class="bg-white p-4 rounded-lg shadow mb-8 relative">
-                    <h2 class="text-2xl font-bold text-red-700 mb-4">Activity Feed</h2>
-                    <!-- Posts will be appended here -->
-                </div>
-
-                <script>
-                    const baseURL = 'http://127.0.0.1:8000/api';
-                    const token = localStorage.getItem('auth_token');
-
-                    document.getElementById('createPostBtn').addEventListener('click', () => {
-                    const form = document.getElementById('postForm');
-                    form.classList.toggle('hidden'); // toggle form muncul/sesuai saat tombol diklik
-                    });
-
-                    async function fetchPosts() {
-                    const response = await fetch(`${baseURL}/posts`, {
-                        headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json',
-                        }
-                    });
-
-                    if (!response.ok) {
-                        alert('Gagal memuat posts');
-                        return;
-                    }
-
-                    const posts = await response.json();
-                    displayPosts(posts);
-                    }
-
-                    function displayPosts(posts) {
-                        const container = document.getElementById('postsContainer');
-                        container.innerHTML = '<h2 class="text-2xl font-bold text-red-700 mb-4">Activity Feed</h2>';
-                        
-                        const currentUserId = localStorage.getItem('user_id'); // Ambil user_id dari localStorage
-                        
-                        posts.forEach(post => {
-                            // Cek apakah user yang login sama dengan user pemilik postingan
-                            const canEdit = post.user && (post.user.user_id.toString() === currentUserId);
-                            
-                            const postEl = document.createElement('div');
-                            postEl.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow', 'mb-4', 'relative');
-                            postEl.innerHTML = `
-                                <div class="absolute top-2 right-2">
-                                    ${canEdit ? `
-                                        <button class="text-blue-500 hover:text-blue-700 font-semibold mr-2" onclick="editPost(${post.id_post})">Edit</button>
-                                        <button class="text-red-500 hover:text-red-700 font-semibold" onclick="deletePost(${post.id_post})">Delete</button>
-                                    ` : ''}
-                                </div>
-                                <div class="flex items-center mb-4">
-                                    <img alt="User Profile" class="rounded-full w-12 h-12" src="https://hackspirit.com/wp-content/uploads/2021/06/Copy-of-Rustic-Female-Teen-Magazine-Cover.jpg" />
-                                    <div class="ml-3">
-                                        <p class="font-bold">${post.user ? post.user.username : 'Unknown'}</p>
-                                        <p class="text-gray-500 text-sm">${new Date(post.created_at).toLocaleString()}</p>
-                                    </div>
-                                </div>
-                                <h3>${post.post_title}</h3>
-                                <p class="mb-4">${post.post_content}</p>
-                                ${post.post_image ? `<img src="http://127.0.0.1:8000/storage/${post.post_image}" alt="Post Image" class="w-full h-64 bg-cover bg-center rounded-lg mb-4 cursor-pointer" />` : ''}
-                            `;
-                            container.appendChild(postEl);
-                        });
-                    }
-
-                    function editPost(id_post) {
-                        window.location.href = `/posts/${id_post}/edit`; // Arahkan ke halaman edit
-                    }
-
-                    async function deletePost(id_post) {
-                        if (!confirm('Are you sure you want to delete this post?')) return;
-
-                        const token = localStorage.getItem('auth_token');
-
-                        const response = await fetch(`${baseURL}/posts/${id_post}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Accept': 'application/json',
-                            }
-                        });
-
-                        if (response.ok) {
-                            alert('Post deleted');
-                            fetchPosts(); // Refresh daftar post
-                        } else {
-                            const err = await response.json();
-                            alert('Failed to delete post: ' + (err.message || 'Unknown error'));
-                        }
-                    }
-
-
-
-                    // Submit post baru
-                    document.getElementById('createPostForm').addEventListener('submit', async e => {
-                        e.preventDefault();
-
-                        const form = document.getElementById('createPostForm');
-                        const formData = new FormData(form); // otomatis ambil semua field termasuk file
-
-                        const response = await fetch(`${baseURL}/posts`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Accept': 'application/json',
-                                // Jangan set Content-Type, biarkan browser yang atur otomatis
-                            },
-                            body: formData
-                        });
-
-                        if (response.ok) {
-                            alert('Postingan berhasil dibuat!');
-                            form.reset();
-                            document.getElementById('postForm').classList.add('hidden');
-                            fetchPosts(); // refresh list post
-                        } else {
-                            const err = await response.json();
-                            alert('Gagal membuat postingan: ' + (err.message || 'Error tidak diketahui'));
-                        }
-                    });
-
-                    // Initial load
-                    fetchPosts();
-                </script>
-          </div>  
+            </div>
         </div>
-    </main>
-  
-    <script>
-      document.querySelectorAll('[data-modal-toggle]').forEach(button => {
-         button.addEventListener('click', function () {
-            const modalId = this.getAttribute('data-modal-toggle');
-            const modal = document.getElementById(modalId);
-            modal.classList.toggle('hidden');
-         });
-   });
-   // Menyembunyikan modal ketika tombol "No, cancel" ditekan
-   document.querySelectorAll('[data-modal-hide]').forEach(button => {
-      button.addEventListener('click', function () {
-         const modalId = this.getAttribute('data-modal-hide');
-         const modal = document.getElementById(modalId);
-         modal.classList.add('hidden');
-      });
-   });
+    </header>
 
-    </script>
+    <!-- Main Content -->
+    <div class="flex min-h-screen pt-16">
+        <!-- Sidebar -->
+        <aside class="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white border-r border-gray-200">
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="{{ route('dashboard') }}" class="sidebar-item active flex items-center px-4 py-3 text-gray-700 rounded-lg">
+                            <i class="ri-home-5-line mr-3 text-xl"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-700 rounded-lg">
+                            <i class="ri-group-line mr-3 text-xl"></i>
+                            <span>Komunitas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-700 rounded-lg">
+                            <i class="ri-map-pin-line mr-3 text-xl"></i>
+                            <span>Fields</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-700 rounded-lg">
+                            <i class="ri-team-line mr-3 text-xl"></i>
+                            <span>Sports Group</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="ml-64 flex-1 p-8">
+            <!-- Create Post -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+                <div class="flex items-center space-x-4">
+                    @if(auth()->user()->profile_photo_path)
+                        <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" 
+                             alt="{{ auth()->user()->name }}" 
+                             class="w-12 h-12 rounded-full object-cover">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&color=fff&background=d60505" 
+                             alt="{{ auth()->user()->name }}" 
+                             class="w-12 h-12 rounded-full object-cover">
+                    @endif
+                    <div class="flex-1">
+                        <input type="text" placeholder="What's on your mind?" 
+                               class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-red-500">
+                    </div>
+                    <button class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Post
+                    </button>
+                </div>
+            </div>
+
+            <!-- Posts Feed -->
+            <div class="space-y-6">
+                <!-- Sample Post -->
+                <div class="post-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <img src="https://ui-avatars.com/api/?name=John+Doe" alt="User" 
+                             class="w-12 h-12 rounded-full object-cover">
+                        <div>
+                            <h3 class="font-medium text-gray-900">John Doe</h3>
+                            <p class="text-sm text-gray-500">2 hours ago</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">
+                        Just had an amazing game of basketball! Looking for players to join our weekly games. 
+                        Anyone interested?
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1546519638-68e109acd27b" 
+                         alt="Post image" class="w-full h-64 object-cover rounded-lg mb-4">
+                    <div class="flex items-center space-x-4 text-gray-500">
+                        <button class="flex items-center space-x-2 hover:text-red-600">
+                            <i class="ri-heart-line"></i>
+                            <span>Like</span>
+                        </button>
+                        <button class="flex items-center space-x-2 hover:text-red-600">
+                            <i class="ri-chat-1-line"></i>
+                            <span>Comment</span>
+                        </button>
+                        <button class="flex items-center space-x-2 hover:text-red-600">
+                            <i class="ri-share-line"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add more sample posts here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Alpine.js for dropdown functionality -->
+    <script src="//unpkg.com/alpinejs" defer></script>
 </body>
 </html>

@@ -3,19 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
+    <title>Sports Space - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/pageStyle.css') }}" />
-    <title>SportsSpace</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
   </head>
   <body>
     <nav>
       <div class="nav__header">
         <div class="nav__logo">
           <a href="{{ url('/') }}">
-            <img src="{{ asset('images/logo.png') }}" alt="SportsSpace Logo">
+            <img src="{{ asset('images/logo.png') }}" alt="SportsSpace Logo" class="max-w-[150px] h-auto">
           </a>
         </div>
         <div class="nav__menu__btn" id="menu-btn">
@@ -23,13 +25,13 @@
         </div>
       </div>
       <ul class="nav__links" id="nav-links">
-        <li><a href="#">Home</a></li>
+        <li><a href="{{ route('landing') }}">Home</a></li>
         <li><a href="{{ route('aboutus') }}">About Us</a></li>
         <li><a href="{{ route('faq') }}">Help</a></li>
       </ul>
       <div class="nav__btns">
-        <button class="btn sign__up" onclick="window.location.href='{{ route('register') }}'">Sign Up</button>
-        <button class="btn sign__in" onclick="window.location.href='{{ route('login') }}'">Sign In</button>
+        <a href="{{ route('register') }}" class="btn sign__up">Sign Up</a>
+        <a href="{{ route('login') }}" class="btn sign__in">Sign In</a>
       </div>
     </nav>
     <header class="header__container">
