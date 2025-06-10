@@ -22,7 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('kota', 50);
             $table->enum('role', ['admin', 'user'])->default('user');
             $table->integer('total_poin')->default(0);
-
+            $table->rememberToken();
+            $table->timestamps();
         });
     }
 

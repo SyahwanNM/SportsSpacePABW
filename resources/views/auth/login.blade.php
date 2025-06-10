@@ -55,7 +55,7 @@
     <nav class="sticky isolate w-full z-9 font-normal py-4 mx-auto flex items-center justify-between pr-8 pl-8 bg-white/10 backdrop-blur-md">
         <div class="flex items-center justify-between w-full">
             <div class="nav__logo">
-                <a href="{{ route('landing') }}" class="hover:opacity-80 transition-opacity">
+                <a href="{{ route('landingpage') }}" class="hover:opacity-80 transition-opacity">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo" class="max-w-[150px] h-auto">
                 </a>
             </div>
@@ -66,7 +66,7 @@
   
         <!-- Menu Links -->
         <ul class="absolute top-5 left-0 w-full p-4 list-none flex flex-row items-center justify-center gap-8">
-            <li><a href="{{ route('landing') }}" class="text-white border-b-4 border-transparent hover:border-red-200 transition duration-300">Home</a></li>
+            <li><a href="{{ route('landingpage') }}" class="text-white border-b-4 border-transparent hover:border-red-200 transition duration-300">Home</a></li>
             <li><a href="{{ route('aboutus') }}" class="text-white border-b-4 border-transparent hover:border-red-200 transition duration-300">About Us</a></li>
             <li><a href="{{ route('faq') }}" class="text-white border-b-4 border-transparent hover:border-red-200 transition duration-300">Help</a></li>
         </ul>
@@ -99,6 +99,12 @@
             <div class="flex justify-center items-center font-semibold pb-6">
                 <h2 class="text-2xl text-gray-800">Welcome Back!</h2>
             </div>
+
+            @if (session('success'))
+                <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
 
             <div class="space-y-4">
                 <button class="social-btn flex items-center justify-center px-3 py-3 w-full text-sm font-medium rounded-xl bg-black text-white border border-[#D5CBFF] hover:bg-gray-800">

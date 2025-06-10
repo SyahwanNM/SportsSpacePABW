@@ -26,6 +26,7 @@ class User extends Authenticatable
         'role',
         'total_poin',
         'photo',
+        'remember_token',
     ];
 
     protected $hidden = [
@@ -33,8 +34,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+        'total_poin' => 'integer',
+    ];
+
     public function komunitas()
     {
         return $this->hasMany(Komunitas::class, 'user_id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'user_id');
     }
 }

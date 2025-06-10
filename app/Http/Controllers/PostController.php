@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -11,91 +12,103 @@ class PostController extends Controller
     // Menampilkan semua postingan di dashboard
     public function index()
     {
-        $posts = Post::all(); // Ambil semua postingan
-        return view('dashboard', compact('posts')); // Kirim data postingan ke view
+        $posts = Post::with('user')->latest()->get();
+        return view('posts.index', compact('posts'));
+    }
+
+    public function create()
+    {
+        return view('posts.create');
     }
 
     // Menyimpan postingan baru
     public function store(Request $request)
     {
-        // Validasi inputan
         $request->validate([
-            'post_title' => 'required|max:255',
-            'post_content' => 'required',
-            'post_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'post_title' => 'required|string|max:255',
+            'post_content' => 'required|string',
+            'post_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        // Mengatur path gambar jika ada
-        $imagePath = null;
+        $post = new Post();
+        $post->user_id = Auth::id();
+        $post->post_title = $request->post_title;
+        $post->post_content = $request->post_content;
+
         if ($request->hasFile('post_image')) {
-            $imagePath = $request->file('post_image')->store('images/posts', 'public');
+            $image = $request->file('post_image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/posts', $imageName);
+            $post->post_image = 'posts/' . $imageName;
         }
 
-        // Menyimpan postingan baru ke database
-        Post::create([
-            'post_title' => $request->post_title,
-            'post_content' => $request->post_content,
-            'post_image' => $imagePath,
-            'created_at' => now(),
-        ]);
+        $post->save();
 
-        // Redirect kembali ke dashboard
-        return redirect()->route('dashboard')->with('status', 'Post created successfully');
+        return redirect()->route('dashboard')->with('success', 'Post created successfully!');
+    }
+
+    public function show($id)
+    {
+        $post = Post::with('user')->findOrFail($id);
+        return view('posts.show', compact('post'));
     }
 
     // Menampilkan halaman edit
-    public function edit(Post $post)
+    public function edit($id)
     {
-        return view('posts.edit', compact('post')); // Kirim data postingan ke form edit
+        $post = Post::findOrFail($id);
+        if ($post->user_id !== Auth::id()) {
+            return redirect()->route('dashboard')->with('error', 'You are not authorized to edit this post.');
+        }
+        return view('posts.edit', compact('post'));
     }
 
     // Mengupdate postingan
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        // Validasi inputan
+        $post = Post::findOrFail($id);
+        if ($post->user_id !== Auth::id()) {
+            return redirect()->route('dashboard')->with('error', 'You are not authorized to update this post.');
+        }
+
         $request->validate([
-            'post_title' => 'required|max:255',
-            'post_content' => 'required',
-            'post_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'post_title' => 'required|string|max:255',
+            'post_content' => 'required|string',
+            'post_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        // Mengupdate data judul dan konten
-        $post->update([
-            'post_title' => $request->post_title,
-            'post_content' => $request->post_content,
-        ]);
+        $post->post_title = $request->post_title;
+        $post->post_content = $request->post_content;
 
-        // Mengupdate gambar jika ada
         if ($request->hasFile('post_image')) {
-            // Hapus gambar lama jika ada
+            // Delete old image if exists
             if ($post->post_image) {
                 Storage::delete('public/' . $post->post_image);
             }
-
-            // Simpan gambar baru
-            $imagePath = $request->file('post_image')->store('images/posts', 'public');
-            $post->update(['post_image' => $imagePath]);
+            
+            $image = $request->file('post_image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/posts', $imageName);
+            $post->post_image = 'posts/' . $imageName;
         }
 
-        // Redirect kembali ke dashboard dengan pesan status
-        return redirect()->route('dashboard')->with('status', 'Post updated successfully');
+        $post->save();
+
+        return redirect()->route('dashboard')->with('success', 'Post updated successfully!');
     }
 
-    public function destroy($id_post)
+    public function destroy($id)
     {
-        // Cari postingan berdasarkan ID
-        $post = Post::findOrFail($id_post);
-
-        // Hapus gambar jika ada
-        if ($post->post_image) {
-            Storage::disk('public')->delete($post->post_image);
+        $post = Post::findOrFail($id);
+        if ($post->user_id !== Auth::id()) {
+            return redirect()->route('dashboard')->with('error', 'You are not authorized to delete this post.');
         }
 
-        // Hapus postingan
+        if ($post->post_image) {
+            Storage::delete('public/' . $post->post_image);
+        }
+
         $post->delete();
-
-        // Redirect kembali ke dashboard dengan status
-        return redirect()->route('dashboard')->with('status', 'Post deleted successfully');
+        return redirect()->route('dashboard')->with('success', 'Post deleted successfully!');
     }
-
 }
