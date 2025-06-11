@@ -15,7 +15,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('lapangans.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('lapangans.*') ? 'bg-gray-100' : '' }}">
+                <a href="{{ route('lapangan.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('lapangan.*') ? 'bg-gray-100' : '' }}">
                     <i class="ri-map-pin-line text-xl text-gray-500 transition duration-75 group-hover:text-red-600"></i>
                     <span class="ml-3">Lapangan</span>
                 </a>

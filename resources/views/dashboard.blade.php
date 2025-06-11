@@ -55,33 +55,33 @@
 
             <div id="posts-list" class="space-y-6">
                 @forelse($posts as $post)
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <div class="flex items-center space-x-4 mb-4">
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <div class="flex items-center space-x-4 mb-4">
                             <img src="{{ $post->user->photo }}" alt="Profile" class="w-10 h-10 rounded-full object-cover" onerror="this.src='{{ asset('storage/profile/default.jpeg') }}'">
-                            <div>
-                                <h3 class="font-semibold text-gray-900">{{ $post->user->username }}</h3>
-                                <p class="text-sm text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
-                            </div>
-                            @if(Auth::id() === $post->user_id)
-                                <div class="ml-auto flex space-x-2">
-                                    <a href="{{ route('posts.edit', $post->id_post) }}" class="text-gray-500 hover:text-gray-700">
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">{{ $post->user->username }}</h3>
+                                    <p class="text-sm text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
+                                </div>
+                                @if(Auth::id() === $post->user_id)
+                                    <div class="ml-auto flex space-x-2">
+                                        <a href="{{ route('posts.edit', $post->id_post) }}" class="text-gray-500 hover:text-gray-700">
                                     <i class="ri-edit-line"></i>
-                                    </a>
-                                    <form action="{{ route('posts.destroy', $post->id_post) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
+                                        </a>
+                                        <form action="{{ route('posts.destroy', $post->id_post) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
                                     <button type="submit" class="text-gray-500 hover:text-red-600" onclick="return confirm('Are you sure you want to delete this post?')">
                                         <i class="ri-delete-bin-line"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
+                            </div>
+                    <p class="text-gray-700 mb-4">{{ $post->content }}</p>
+                            @if($post->post_image)
+                        <img src="{{ asset('storage/' . $post->post_image) }}" alt="Post Image" class="w-full h-48 object-cover rounded-lg">
                             @endif
                         </div>
-                    <p class="text-gray-700 mb-4">{{ $post->content }}</p>
-                        @if($post->post_image)
-                        <img src="{{ asset('storage/' . $post->post_image) }}" alt="Post Image" class="w-full h-48 object-cover rounded-lg">
-                        @endif
-                    </div>
                 @empty
                     <p class="text-center text-gray-500">No posts available.</p>
                 @endforelse
@@ -268,7 +268,7 @@
                     }
                 } else if (data.message) {
                     alert('Error: ' + data.message);
-                } else {
+        } else {
                     alert('Error: ' + errorMsg);
                 }
             }
