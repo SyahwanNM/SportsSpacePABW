@@ -18,7 +18,7 @@
                     </a>
                 </div>
                 
-                <form id="editProfileForm" class="space-y-6">
+                <form id="editProfileForm" class="space-y-6" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="_method" value="PUT">
                     
@@ -26,7 +26,7 @@
                     <div class="flex flex-col items-center mb-8">
                         <div class="relative">
                             <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-red-600">
-                                <img id="current-photo" src="{{ asset('storage/profile/default-profile.jpg') }}" alt="Current Profile" class="w-full h-full object-cover">
+                                <img id="current-photo" src="{{ asset('storage/profile/default-profile.jpg') }}" alt="Current Profile" class="w-full h-full object-cover" onerror="this.src='{{ asset('storage/profile/default-profile.jpg') }}'">
                             </div>
                             <label for="photo" class="absolute bottom-0 right-0 bg-red-600 text-white p-2 rounded-full cursor-pointer hover:bg-red-700 transition">
                                 <i class="fi fi-rs-camera"></i>
@@ -34,6 +34,7 @@
                             <input type="file" name="photo" id="photo" accept="image/*" class="hidden">
                         </div>
                         <p class="text-sm text-gray-500 mt-2">Click the camera icon to change your profile photo</p>
+                        <p class="text-xs text-gray-400 mt-1">Max file size: 2MB. Supported formats: JPG, JPEG, PNG</p>
                     </div>
 
                     <!-- Form Fields -->
@@ -222,6 +223,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const photoFile = document.getElementById('photo').files[0];
         if (photoFile) {
+            // Validate file size (2MB max)
+            if (photoFile.size > 2 * 1024 * 1024) {
+                showError('Photo size must be less than 2MB');
+                return;
+            }
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(photoFile.type)) {
+                showError('Only JPG, JPEG, and PNG files are allowed');
+                return;
+            }
             formData.append('photo', photoFile);
         }
 

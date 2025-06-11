@@ -14,7 +14,8 @@
                 <div class="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
                     <!-- Profile Image -->
                     <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-red-600">
-                        <img id="profile-image" src="{{ asset('storage/profile/default-profile.jpg') }}" alt="Profile Picture" class="w-full h-full object-cover">
+                        <img id="profile-image" src="{{ Auth::user()->photo }}" alt="Profile Picture" class="w-full h-full object-cover" onerror="this.src='{{ asset('storage/profile/default.jpeg') }}'">
+                        <p>Debug path: {{ Auth::user()->photo }}</p>
                     </div>
                     
                     <!-- Profile Info -->
@@ -191,160 +192,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchProfileData = async () => {
         try {
             const response = await fetch('/api/profile', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
             });
 
             if (!response.ok) {
-                if (response.status === 401) {
-                    localStorage.removeItem('auth_token');
-                    window.location.href = '/login';
-                    throw new Error('Sesi Anda telah berakhir. Silakan login kembali.');
-                }
-                throw new Error('Gagal mengambil data profile. Status: ' + response.status);
+                throw new Error('Network response was not ok');
             }
 
             const data = await response.json();
             const user = data.user;
 
-            // Update profile container
-            document.getElementById('profile-container').innerHTML = `
-                <div class="space-y-4">
-                    <h2 class="text-2xl font-bold text-gray-800">${user.username || '-'}</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-gray-600">Email</p>
-                            <p class="font-semibold">${user.email || '-'}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600">Kota</p>
-                            <p class="font-semibold">${user.kota || '-'}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600">Gender</p>
-                            <p class="font-semibold">${user.gender || '-'}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600">Tanggal Lahir</p>
-                            <p class="font-semibold">${user.tanggal_lahir || '-'}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
             // Update profile image
             const profileImage = document.getElementById('profile-image');
-            if (user.photo && user.photo !== 'null' && user.photo !== '') {
-                const timestamp = new Date().getTime();
-                const imageUrl = `${user.photo}?t=${timestamp}`;
-                
-                const testImage = new Image();
-                testImage.onload = function() {
-                    profileImage.src = imageUrl;
-                    retryCount = 0;
-                    window.dispatchEvent(new CustomEvent('profileUpdated', {
-                        detail: { photo: user.photo }
-                    }));
-                };
-                testImage.onerror = function() {
-                    profileImage.src = "{{ asset('storage/profile/default-profile.jpg') }}";
-                    retryCount++;
-                    if (retryCount < MAX_RETRIES) {
-                        setTimeout(fetchProfileData, 2000);
-                    }
-                };
-                testImage.src = imageUrl;
-            } else {
-                profileImage.src = "{{ asset('storage/profile/default-profile.jpg') }}";
-                window.dispatchEvent(new CustomEvent('profileUpdated', {
-                    detail: { photo: null }
-                }));
+            if (profileImage && user.photo) {
+                profileImage.src = user.photo;
             }
 
-            localStorage.setItem('user_profile', JSON.stringify(user));
-        } catch (error) {
-            console.error('Error fetching profile:', error);
-            document.getElementById('profile-container').innerHTML = `
-                <div class="text-red-600">
-                    ${error.message}
-                </div>
-            `;
-        }
-    };
-
-    // Function to fetch user's posts
-    const fetchUserPosts = async () => {
-        try {
-            const response = await fetch('/api/posts', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch posts');
-            }
-
-            const data = await response.json();
-            const postsContainer = document.getElementById('posts-container');
-            
-            if (data.length === 0) {
-                postsContainer.innerHTML = `
-                    <div class="col-span-2 text-center py-8">
-                        <p class="text-gray-500">You haven't made any posts yet.</p>
-                    </div>
+            // Update other profile data
+            const profileContainer = document.getElementById('profile-container');
+            if (profileContainer) {
+                profileContainer.innerHTML = `
+                    <h2 class="text-2xl font-bold text-gray-900">${user.username}</h2>
+                    <p class="text-gray-600">${user.email}</p>
+                    <p class="text-gray-600">${user.kota || 'No city set'}</p>
                 `;
-                return;
             }
 
-            postsContainer.innerHTML = data.map(post => `
-                <div class="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition duration-300">
-                    <div class="flex items-center space-x-4 mb-4">
-                        <img 
-                            src="${post.user.photo ? post.user.photo : '{{ asset('storage/profile/default-profile.jpg') }}'}" 
-                            alt="User Profile Picture" 
-                            class="h-12 w-12 rounded-full object-cover"
-                        />
-                        <div>
-                            <p class="font-bold text-lg">${post.user.username}</p>
-                            <p class="text-gray-500 text-sm">${new Date(post.created_at).toLocaleString()}</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 mb-4">${post.content}</p>
-                    ${post.image ? `
-                        <img 
-                            src="${post.image}" 
-                            alt="Post Image" 
-                            class="w-full h-48 object-cover rounded-lg"
-                        />
-                    ` : ''}
-                </div>
-            `).join('');
-
         } catch (error) {
-            console.error('Error fetching posts:', error);
-            document.getElementById('posts-container').innerHTML = `
-                <div class="col-span-2 text-center py-8">
-                    <p class="text-red-500">Failed to load posts. Please try again later.</p>
-                </div>
-            `;
+            console.error('Error fetching profile data:', error);
+            if (retryCount < MAX_RETRIES) {
+                retryCount++;
+                setTimeout(fetchProfileData, 1000 * retryCount);
+            }
         }
     };
 
-    // Fetch data immediately
+    // Initial fetch
     fetchProfileData();
-    fetchUserPosts();
-
-    // Set up periodic refresh
-    setInterval(fetchProfileData, 30000);
-    setInterval(fetchUserPosts, 30000);
 });
 
 // Tab switching functionality

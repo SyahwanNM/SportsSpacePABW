@@ -26,9 +26,11 @@ class UserProfileController extends Controller
         if ($userData['photo'] && $userData['photo'] !== 'null' && $userData['photo'] !== '') {
             // If the photo path doesn't start with http, prepend the app URL
             if (!str_starts_with($userData['photo'], 'http')) {
-                $userData['photo'] = asset($userData['photo']);
+                $userData['photo'] = asset('storage/' . $userData['photo']);
             }
             Log::info('Generated photo URL:', ['url' => $userData['photo']]);
+        } else {
+            $userData['photo'] = asset('storage/profile/default.jpeg');
         }
 
         return response()->json([
@@ -93,24 +95,24 @@ class UserProfileController extends Controller
                 
                 // Delete old photo if exists
                 if ($user->photo) {
-                    $oldPhotoPath = public_path('storage/profile/' . basename($user->photo));
-                    if (file_exists($oldPhotoPath)) {
-                        unlink($oldPhotoPath);
+                    $oldPhotoPath = str_replace('storage/', '', $user->photo);
+                    if (Storage::exists($oldPhotoPath)) {
+                        Storage::delete($oldPhotoPath);
                     }
                 }
 
                 // Store new photo
                 $file = $request->file('photo');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('storage/profile'), $filename);
+                $path = $file->storeAs('profile', $filename, 'public');
                 
                 // Update user photo path
-                $user->photo = 'storage/profile/' . $filename;
+                $user->photo = $path;
                 $user->save();
                 
                 Log::info('Photo uploaded successfully', [
                     'filename' => $filename,
-                    'photo_url' => $user->photo
+                    'photo_path' => $path
                 ]);
             }
 
@@ -123,9 +125,11 @@ class UserProfileController extends Controller
             if ($userData['photo'] && $userData['photo'] !== 'null' && $userData['photo'] !== '') {
                 // If the photo path doesn't start with http, prepend the app URL
                 if (!str_starts_with($userData['photo'], 'http')) {
-                    $userData['photo'] = asset($userData['photo']);
+                    $userData['photo'] = asset('storage/' . $userData['photo']);
                 }
                 Log::info('Generated photo URL:', ['url' => $userData['photo']]);
+            } else {
+                $userData['photo'] = asset('storage/profile/default-profile.jpg');
             }
 
             return response()->json([

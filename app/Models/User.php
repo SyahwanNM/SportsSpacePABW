@@ -39,6 +39,18 @@ class User extends Authenticatable
         'total_poin' => 'integer',
     ];
 
+    // Accessor for photo attribute
+    public function getPhotoAttribute($value)
+    {
+        if ($value && $value !== 'null' && $value !== '') {
+            if (!str_starts_with($value, 'http')) {
+                return asset('storage/' . ltrim($value, 'storage/'));
+            }
+            return $value;
+        }
+        return asset('storage/profile/default.jpeg');
+    }
+
     public function komunitas()
     {
         return $this->hasMany(Komunitas::class, 'user_id');

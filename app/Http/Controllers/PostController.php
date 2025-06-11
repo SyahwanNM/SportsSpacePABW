@@ -34,15 +34,26 @@ class PostController extends Controller
         $post->user_id = Auth::id();
         $post->post_title = $request->post_title;
         $post->post_content = $request->post_content;
+        $post->created_at = now();
 
         if ($request->hasFile('post_image')) {
             $image = $request->file('post_image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/posts', $imageName);
+            Storage::disk('public')->put('posts/' . $imageName, file_get_contents($image));
             $post->post_image = 'posts/' . $imageName;
         }
 
         $post->save();
+
+        // Reload the user data to get the updated photo URL if any
+        $user = Auth::user();
+        
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Post created successfully!',
+                'post' => $post->load('user'), // Load user relationship for the new post
+            ]);
+        }
 
         return redirect()->route('dashboard')->with('success', 'Post created successfully!');
     }
@@ -83,12 +94,12 @@ class PostController extends Controller
         if ($request->hasFile('post_image')) {
             // Delete old image if exists
             if ($post->post_image) {
-                Storage::delete('public/' . $post->post_image);
+                Storage::disk('public')->delete($post->post_image);
             }
             
             $image = $request->file('post_image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/posts', $imageName);
+            Storage::disk('public')->put('posts/' . $imageName, file_get_contents($image));
             $post->post_image = 'posts/' . $imageName;
         }
 
@@ -105,7 +116,7 @@ class PostController extends Controller
         }
 
         if ($post->post_image) {
-            Storage::delete('public/' . $post->post_image);
+            Storage::disk('public')->delete($post->post_image);
         }
 
         $post->delete();

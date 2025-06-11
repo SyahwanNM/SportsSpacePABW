@@ -1,40 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $post->title }} - Sports Space</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center">
-                    <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-gray-900">
-                        <i class="ri-arrow-left-line text-xl"></i>
-                    </a>
-                    <h1 class="ml-4 text-xl font-semibold text-gray-900">Post Detail</h1>
-                </div>
-            </div>
-        </div>
-    </header>
+@extends('layouts.app')
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+@section('title', $post->title)
+
+@section('content')
+<main class="sm:ml-64 pt-20 pb-20">
+    <div class="rounded-lg p-4">
         <div class="bg-white rounded-lg shadow-sm p-6">
             <!-- Post Header -->
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center space-x-4">
-                    <img src="{{ asset('storage/' . ($post->user->photo ?? 'profile/default.jpeg')) }}" 
+                    <img src="{{ asset('storage/' . ($post->user->photo ?? 'profile/default-profile.jpg')) }}" 
                          alt="{{ $post->user->username }}" 
                          class="w-12 h-12 rounded-full object-cover">
                     <div>
@@ -90,6 +65,6 @@
                 </button>
             </div>
         </div>
-    </main>
-</body>
-</html> 
+    </div>
+</main>
+@endsection 
