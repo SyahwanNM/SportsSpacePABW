@@ -24,4 +24,9 @@ class Lapangan extends Model
         'description',
         'address'
     ];
+
+    public function ratingLapangans()
+    {
+        return $this->hasMany(\App\Models\RatingLapangan::class, 'id_field');
+    }
 }

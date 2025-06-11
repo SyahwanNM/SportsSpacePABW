@@ -15,6 +15,7 @@ class LapanganController extends Controller
 
     public function show(Lapangan $lapangan)
     {
-        return view('lapangan.show', compact('lapangan'));
+        $reviews = $lapangan->ratingLapangans()->with('user')->latest('tanggalwaktu')->get();
+        return view('lapangan.show', compact('lapangan', 'reviews'));
     }
 } 

@@ -26,10 +26,18 @@
                     <i class="ri-dashboard-line mr-3"></i>
                     Dashboard
                 </a>
-                <a href="{{ route('admin.lapangan.index') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 {{ request()->routeIs('admin.lapangan.*') ? 'bg-red-50 text-red-600' : '' }}">
-                    <i class="ri-football-line mr-3"></i>
-                    Fields
-                </a>
+                <li>
+                    <a href="{{ route('admin.lapangan.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="ri-football-line text-xl text-gray-500 transition duration-75 group-hover:text-red-600"></i>
+                        <span class="ml-3">Fields</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.users.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="ri-user-line text-xl text-gray-500 transition duration-75 group-hover:text-red-600"></i>
+                        <span class="ml-3">Users</span>
+                    </a>
+                </li>
                 <form method="POST" action="{{ route('logout') }}" class="mt-auto">
                     @csrf
                     <button type="submit" class="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600">

@@ -10,6 +10,7 @@ use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LapanganController;
+use App\Http\Controllers\RatingLapanganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,12 +63,14 @@ Route::middleware('auth')->group(function () {
     // User routes
     Route::get('/lapangan', [LapanganController::class, 'index'])->name('lapangan.index');
     Route::get('/lapangan/{lapangan}', [LapanganController::class, 'show'])->name('lapangan.show');
+    Route::post('/lapangan/{lapangan}/review', [RatingLapanganController::class, 'store'])->name('lapangan.review.store');
 });
 
 // Admin routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('lapangan', App\Http\Controllers\Admin\LapanganController::class);
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
 });
 
 require __DIR__.'/auth.php';

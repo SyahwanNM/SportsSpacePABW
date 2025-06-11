@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class RatingLapangan extends Model
 {
@@ -21,6 +22,14 @@ class RatingLapangan extends Model
         'komentar',
         'tanggalwaktu',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->id_rating = Str::uuid();
+        });
+    }
 
     public function field()
     {

@@ -41,9 +41,9 @@
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
                     <i class="ri-star-fill text-yellow-400 text-xl mr-1"></i>
-                    <p class="text-sm font-bold text-gray-900">4.95</p>
+                    <p class="text-sm font-bold text-gray-900">{{ number_format($reviews->avg('rating'), 2) }}</p>
                     <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full"></span>
-                    <a href="#reviews" class="text-sm font-medium text-gray-900 underline hover:no-underline">73 reviews</a>
+                    <a href="#reviews" class="text-sm font-medium text-gray-900 underline hover:no-underline">{{ $reviews->count() }} reviews</a>
                 </div>
                 <span class="bg-red-700 rounded-md px-3 py-1 text-white text-sm font-bold">{{ $lapangan->categori }}</span>
             </div>
@@ -122,40 +122,59 @@
         <!-- Reviews Section -->
         <section class="bg-white p-4 rounded-lg shadow mb-4" id="reviews">
             <h2 class="text-xl font-bold mb-4">Reviews</h2>
-            <!-- Sample Review -->
-            <article class="mb-6 pb-6 border-b border-gray-200">
-                <div class="flex items-center mb-4">
-                    <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=User&background=random" alt="User">
-                    <div class="ml-4">
-                        <p class="font-medium">User Name</p>
-                        <p class="text-sm text-gray-500">Joined on October 2023</p>
+            @forelse($reviews as $review)
+                <article class="mb-6 pb-6 border-b border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <img class="w-10 h-10 rounded-full" src="{{ $review->user->photo ?? 'https://ui-avatars.com/api/?name=' . urlencode($review->user->username) }}" alt="User">
+                        <div class="ml-4">
+                            <p class="font-medium">{{ $review->user->username ?? 'User' }}</p>
+                            <p class="text-sm text-gray-500">{{ date('d M Y', strtotime($review->tanggalwaktu)) }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center mb-2">
+                        <div class="flex text-yellow-400">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="ri-star{{ $i <= $review->rating ? '-fill' : '-line' }}"></i>
+                            @endfor
+                        </div>
+                        <span class="ml-2 text-sm font-semibold">{{ $review->komentar }}</span>
+                    </div>
+                </article>
+            @empty
+                <p class="text-gray-500">Belum ada review untuk lapangan ini.</p>
+            @endforelse
+
+            @auth
+            <form action="{{ route('lapangan.review.store', $lapangan->id_field) }}" method="POST" class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                @csrf
+                <h3 class="text-lg font-semibold mb-4 flex items-center">
+                    <i class="ri-edit-line mr-2 text-red-600"></i>
+                    Tambah Review
+                </h3>
+                <div class="mb-4">
+                    <label for="rating" class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                    <div class="flex items-center">
+                        <select name="rating" id="rating" class="block w-24 rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500" required>
+                            <option value="">Pilih rating</option>
+                            @for($i=5; $i>=1; $i--)
+                                <option value="{{ $i }}">{{ $i }} Bintang</option>
+                            @endfor
+                        </select>
+                        <div class="ml-2 text-yellow-400">
+                            <i class="ri-star-fill"></i>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center mb-2">
-                    <div class="flex text-yellow-400">
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-fill"></i>
-                        <i class="ri-star-half-fill"></i>
-                    </div>
-                    <span class="ml-2 text-sm font-semibold">Good Facilities</span>
+                <div class="mb-4">
+                    <label for="komentar" class="block text-sm font-medium text-gray-700 mb-1">Komentar</label>
+                    <textarea name="komentar" id="komentar" rows="3" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500" placeholder="Bagikan pengalaman Anda..." required>{{ old('komentar') }}</textarea>
                 </div>
-                <p class="text-sm text-gray-600 mb-2">Reviewed on March 3, 2024</p>
-                <p class="text-gray-600 mb-2">Pencahayaan lapangan terang, sehingga saya dapat bermain dengan nyaman</p>
-                <p class="text-gray-600 mb-3">Toilet bersih, ada kantin yang lengkap</p>
-                <div class="flex items-center justify-between">
-                    <p class="text-xs text-gray-500">19 people found this helpful</p>
-                    <div class="flex items-center space-x-4">
-                        <button class="px-3 py-1 text-sm border border-gray-200 rounded-lg hover:bg-gray-100">
-                            Helpful
-                        </button>
-                        <button class="text-sm text-blue-600 hover:underline">
-                            Report abuse
-                        </button>
-                    </div>
-                </div>
-            </article>
+                <button type="submit" class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 flex items-center">
+                    <i class="ri-send-plane-fill mr-2"></i>
+                    Kirim Review
+                </button>
+            </form>
+            @endauth
         </section>
     </div>
 </main>

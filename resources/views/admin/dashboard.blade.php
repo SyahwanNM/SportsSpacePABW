@@ -18,6 +18,19 @@
             </div>
         </div>
 
+        <!-- Total Users Card -->
+        <div class="bg-blue-50 rounded-lg p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-gray-600 text-sm">Total Users</h2>
+                    <p class="text-2xl font-bold text-blue-600">{{ \App\Models\User::count() }}</p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <i class="ri-user-line text-2xl text-blue-600"></i>
+                </div>
+            </div>
+        </div>
+
         <!-- Quick Actions -->
         <div class="bg-white border rounded-lg p-6">
             <h2 class="text-lg font-semibold mb-4">Quick Actions</h2>
@@ -33,5 +46,40 @@
             </div>
         </div>
     </div>
+
+    <!-- Chart Section -->
+    <div class="mt-8">
+        <h2 class="text-lg font-semibold mb-4">User Activity Chart</h2>
+        <div class="bg-white border rounded-lg p-6">
+            <canvas id="userActivityChart"></canvas>
+        </div>
+    </div>
 </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('userActivityChart').getContext('2d');
+    const userActivityChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'User Activity',
+                data: [12, 19, 3, 5, 2, 3],
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+@endpush
 @endsection 

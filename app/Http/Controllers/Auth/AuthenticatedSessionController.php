@@ -24,7 +24,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // Cek apakah user adalah admin berdasarkan email
-        if (Auth::user()->email === 'admin@admin.com') {
+        if (Auth::user()->email === 'admin@sportsspace.com') {
             return redirect()->intended('/admin/dashboard');
         } else {
             // Jika bukan admin, arahkan ke dashboard user
