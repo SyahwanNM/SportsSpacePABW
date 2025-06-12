@@ -21,6 +21,12 @@
                      </a>
                   </li>
                   <li>
+                    <a href="{{ route('sports-group.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="ri-basketball-line text-xl text-gray-500 transition duration-75 group-hover:text-red-600"></i>
+                        <span class="ml-3">Sports Group</span>
+                    </a>
+                </li>
+                  <li>
                 <a href="{{ route('profile') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {{ request()->routeIs('profile') ? 'bg-gray-100' : '' }}">
                     <i class="ri-user-line text-xl text-gray-500 transition duration-75 group-hover:text-red-600"></i>
                     <span class="ml-3">Profile</span>

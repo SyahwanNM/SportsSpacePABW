@@ -14,7 +14,8 @@ class MemberSportsgroup extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id',
+        'id_member',
+        'id',       //id dari tabel sports_groups
         'user_id',
         'join_at',
     ];

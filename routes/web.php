@@ -11,6 +11,8 @@ use App\Http\Controllers\FAQController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LapanganController;
 use App\Http\Controllers\RatingLapanganController;
+use App\Http\Controllers\KomunitasController;
+Use App\Http\Controllers\SportsGroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +66,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/lapangan', [LapanganController::class, 'index'])->name('lapangan.index');
     Route::get('/lapangan/{lapangan}', [LapanganController::class, 'show'])->name('lapangan.show');
     Route::post('/lapangan/{lapangan}/review', [RatingLapanganController::class, 'store'])->name('lapangan.review.store');
+    //komunitas routes
+    Route::get('/komunitas', [KomunitasController::class, 'index'])->name('komunitas.index');
+    Route::get('/komunitas/create', [KomunitasController::class, 'create'])->name('komunitas.create');
+    Route::post('/komunitas', [KomunitasController::class, 'store'])->name('komunitas.store');
+    Route::get('/komunitas/{komunitas}', [KomunitasController::class, 'show'])->name('komunitas.show');
+    Route::get('/komunitas/{komunitas}/edit', [KomunitasController::class, 'edit'])->name('komunitas.edit');
+    Route::put('/komunitas/{komunitas}', [KomunitasController::class, 'update'])->name('komunitas.update');
+    // Sports Group routes
+    Route::get('/sports-group', [SportsGroupController::class, 'index'])->name('sports-group.index');
+    Route::get('/sports-group/create', [SportsGroupController::class, 'create'])->name('sports-group.create');
+    Route::post('/sports-group', [SportsGroupController::class, 'store'])->name('sports-group.store');
+    Route::get('/sports-group/{id}', [SportsGroupController::class, 'show'])->name('sports-group.show');
+    Route::get('/sports-group/{group}/edit', [SportsGroupController::class, 'edit'])->name('sports-group.edit');
+    Route::put('/sports-group/{group}', [SportsGroupController::class, 'update'])->name('sports-group.update');
+    // Route to join sports group
+    Route::post('/sports-group/{id}/join', [SportsGroupController::class, 'join'])->name('sports-group.join');
 });
 
 // Admin routes

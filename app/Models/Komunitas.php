@@ -12,7 +12,6 @@ class Komunitas extends Model
     protected $table = 'komunitas';
     protected $primaryKey = 'id_kmnts';
     protected $fillable = [
-        'id_kmnts',
         'nama',
         'jns_olahraga',
         'max_members',
@@ -30,4 +29,21 @@ class Komunitas extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
+
+    public function getFotoAttribute($value)
+    {
+        if ($value && $value !== 'null' && $value !== '') {
+            return asset('storage/' . ltrim($value, 'storage/'));
+        }
+        return asset('storage/images/komunitas/default_foto.png');
+    }
+
+    public function getSampulAttribute($value)
+    {
+        if ($value && $value !== 'null' && $value !== '') {
+            return asset('storage/' . ltrim($value, 'storage/'));
+        }
+        return asset('storage/images/komunitas/default_sampul.png');
+    }
+
 }
