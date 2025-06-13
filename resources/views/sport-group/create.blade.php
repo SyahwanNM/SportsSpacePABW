@@ -147,11 +147,11 @@
     <div class="p-4 sm:ml-64 pt-20">
         <div class="p-4 rounded-lg">
             <div class="flex bg-white mx-2 p-2 w-full shadow-lg rounded-lg ">
-                <a href="/sports-group/sports-group.html">
-                    <i class="fi fi-rs-arrow-left">Back</i>
-                </a>
                 <div class="ml-2">
-                    <p class="text-xs text-gray-500 mt-0.5">Back </p>
+                    <a href="{{ route('sports-group.index') }}" class="">
+                        <i class="fi fi-rs-arrow-left">Back</i>
+                    </a>
+                    <!-- <p class="text-xs text-gray-500 mt-0.5">Back </p> -->
                     <p class="text-xl font-semibold">Add Sports Group</p>
                 </div>
             </div>

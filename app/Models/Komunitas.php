@@ -46,4 +46,9 @@ class Komunitas extends Model
         return asset('storage/images/komunitas/default_sampul.png');
     }
 
+    public function memberKomunitas()
+    {
+        return $this->hasMany(MemberKomunitas::class, 'id_kmnts', 'id_kmnts');
+    }
+
 }

@@ -73,6 +73,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/komunitas/{komunitas}', [KomunitasController::class, 'show'])->name('komunitas.show');
     Route::get('/komunitas/{komunitas}/edit', [KomunitasController::class, 'edit'])->name('komunitas.edit');
     Route::put('/komunitas/{komunitas}', [KomunitasController::class, 'update'])->name('komunitas.update');
+    Route::delete('/komunitas/{komunitas}', [KomunitasController::class, 'destroy'])->name('komunitas.destroy');
+    // Route to join community
+    Route::post('/komunitas/{id_kmnts}/join', [KomunitasController::class, 'join'])->name('komunitas.join');
+    // Route to leave community
+    Route::post('/komunitas/{id_kmnts}/leave', [KomunitasController::class, 'leave'])->name('komunitas.leave');
     // Sports Group routes
     Route::get('/sports-group', [SportsGroupController::class, 'index'])->name('sports-group.index');
     Route::get('/sports-group/create', [SportsGroupController::class, 'create'])->name('sports-group.create');
@@ -82,6 +87,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/sports-group/{group}', [SportsGroupController::class, 'update'])->name('sports-group.update');
     // Route to join sports group
     Route::post('/sports-group/{id}/join', [SportsGroupController::class, 'join'])->name('sports-group.join');
+    // Route to leave sports group
+    Route::post('/sports-group/{id}/leave', [SportsGroupController::class, 'leave'])->name('sports-group.leave');
 });
 
 // Admin routes

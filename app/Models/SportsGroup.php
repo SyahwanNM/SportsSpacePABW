@@ -29,9 +29,9 @@ class SportsGroup extends Model
         'created_at',
     ];
 
-    public function memberSportsgroup()
+    public function members()
     {
-        return $this->hasMany(MemberSportsgroup::class, 'id');
+        return $this->hasMany(MemberSportsgroup::class, 'id', 'id'); // foreign key di member_sportsgroups, local key di sports_groups
     }
 
         public function user()

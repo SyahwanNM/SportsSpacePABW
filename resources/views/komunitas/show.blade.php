@@ -164,17 +164,34 @@
                         <p class="text-gray-600">{{ $komunitas->jns_olahraga }} • {{ $komunitas->kota }} • 0/{{ $komunitas->max_members }}</p>
                     </div>
                     <div class="flex justify-between items-center px-6 mb-6">
-                        <a href="{{ route('komunitas.edit', $komunitas->id_kmnts)}}">
+                    @if(Auth::id() == $komunitas->user_id)
+                        <a href="{{ route('komunitas.edit', $komunitas->id_kmnts) }}">
                             <button class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg">
                                 Edit Komunitas
                             </button>
-                        </a>    
-                        <a href="detailMyKomunitas.html">
-                            <button class="bg-red-600 text-white w-24 px-4 py-2 rounded-lg hover:bg-red-700">
-                                JOIN
-                            </button>
                         </a>
-                  </div>
+                    @endif
+
+                    @if(Auth::check())
+                        @if($isMember)
+                            @if(Auth::id() != $komunitas->user_id)
+                                <form action="{{ route('komunitas.leave', $komunitas->id_kmnts) }}" method="POST">
+                                    @csrf
+                                    <button class="bg-gray-500 text-white w-24 px-4 py-2 rounded-lg hover:bg-gray-700">
+                                        LEAVE
+                                    </button>
+                                </form>
+                            @endif
+                        @else
+                            <form action="{{ route('komunitas.join', $komunitas->id_kmnts) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="bg-red-600 text-white w-24 px-4 py-2 rounded-lg hover:bg-red-700">
+                                    JOIN
+                                </button>
+                            </form>
+                        @endif
+                    @endif
+                </div>
             </div>
 
                 <!-- Tab Menu -->
@@ -183,6 +200,7 @@
                     <!-- Buttons -->
                     <button class="tab-btn bg-red-500 text-white px-4 py-2 rounded-t-lg" data-tab="About-community">About Community</button>
                     <button class="tab-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-t-lg" data-tab="Members">Members</button>
+                    <button class="tab-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-t-lg" data-tab="activity">Activity</button>
                     </div>
                 </div>
 
@@ -197,83 +215,99 @@
                         <div>
                             <ul>
                                 <!-- Friend 1 -->
+                                 @foreach ($komunitas->memberKomunitas as $member)
                                 <li class="flex items-center mb-4 hover:bg-gray-100 p-4 rounded-lg">
-                                <img alt="Friend 1" class="rounded-full w-10 h-10 mr-4" src="https://media.glamour.com/photos/5e8262bb259e2e0008c4082a/master/w_1600%2Cc_limit/Serena_Williams_GettyImages-1201566206.jpg" />
+                                <img alt="Friend 1" class="rounded-full w-10 h-10 mr-4" src="{{ Auth::user()->photo }}" />
                                 <div>
-                                    <p class="font-medium">Wiyah</p>
-                                    <p class="text-gray-500 text-sm">Online 3 hours ago</p>
+                                    <p class="font-medium">{{ $member->user->username }}</p>
+                                    <p class="text-gray-500 text-sm">{{ $member->user->email }}</p>
                                 </div>
                                 <div class="ml-12">
                                  <i class="fa-solid fa-user-plus"></i>
                                 </div>
                                 </li>
-                                
-                                <!-- Friend 2 -->
-                                <li class="flex items-center mb-4 hover:bg-gray-100 p-4 rounded-lg">
-                                <img alt="Friend 2" class="rounded-full w-10 h-10 mr-4" src="https://staticbiassets.in/thumb/msid-52209639,width-700,height-525,imgsize-95233/no-1-cristiano-ronaldo.jpg" />
-                                <div>
-                                    <p class="font-medium">Madli</p>
-                                    <p class="text-gray-500 text-sm">Online 2 hours ago</p>
-                                </div>
-                                <div class="ml-12">
-                                 <i class="fa-solid fa-user-plus"></i>
-                                </div>
-                                </li>
-                                
-                                <!-- Friend 3 -->
-                                <li class="flex items-center mb-4 hover:bg-gray-100 p-4 rounded-lg">
-                                <img alt="Friend 3" class="rounded-full w-10 h-10 mr-4" src="https://media.istockphoto.com/id/1367872098/photo/full-length-shot-of-a-handsome-young-male-athlete-running-on-an-outdoor-track.jpg?s=612x612&w=0&k=20&c=imRu7XY3ObDjdy33ksq9MWYrzY1mj_-kfk4f5GknAsU=" />
-                                <div>
-                                    <p class="font-medium">Natan</p>
-                                    <p class="text-gray-500 text-sm">Online 5 hours ago</p>
-                                </div>
-                                <div class="ml-12">
-                                 <i class="fa-solid fa-user-plus"></i>
-                                </div>
-                                </li>
-                            </ul>
-                         </div>
-                         <div>
-                            <ul>
-                                <!-- Friend 1 -->
-                                <li class="flex items-center mb-4 hover:bg-gray-100 p-4 rounded-lg">
-                                <img alt="Friend 1" class="rounded-full w-10 h-10 mr-4" src="https://cdn.bleacherreport.net/images_root/slides/photos/001/035/856/117080847_original.jpg?1308673450" />
-                                <div>
-                                    <p class="font-medium">Adit</p>
-                                    <p class="text-gray-500 text-sm">Online 3 hours ago</p>
-                                </div>
-                                <div class="ml-12">
-                                 <i class="fa-solid fa-user-plus"></i>
-                                </div>
-                                </li>
-                                
-                                <!-- Friend 2 -->
-                                <li class="flex items-center mb-4 hover:bg-gray-100 p-4 rounded-lg">
-                                <img alt="Friend 2" class="rounded-full w-10 h-10 mr-4" src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" />
-                                <div>
-                                    <p class="font-medium">Dion</p>
-                                    <p class="text-gray-500 text-sm">Online 2 hours ago</p>
-                                </div>
-                                <div class="ml-12">
-                                 <i class="fa-solid fa-user-plus"></i>
-                                </div>
-                                </li>
-                                
-                                <!-- Friend 3 -->
-                                <li class="flex items-center mb-4 hover:bg-gray-100 p-4 rounded-lg">
-                                <img alt="Friend 3" class="rounded-full w-10 h-10 mr-4" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4cXdyD8JaA2V9NyT62jvDwgzS4CV2cmWdfA&s" />
-                                <div>
-                                    <p class="font-medium">Maria</p>
-                                    <p class="text-gray-500 text-sm">Online 5 hours ago</p>
-                                </div>
-                                <div class="ml-12">
-                                 <i class="fa-solid fa-user-plus"></i>
-                                </div>
-                                </li>
+                                @endforeach
                             </ul>
                          </div>
                     </div>
                 </div>
+                <div id="activity" class="tab-content hidden bg-white p-6 rounded-b-lg shadow-md">
+                  <button id="openModalButton" class="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">Create Activity</button>
+                     <div id='activityList'>   
+                     
+                     </div>
+                </div>
+                <div id="activity" class="tab-content hidden bg-white p-6 rounded-b-lg shadow-md">
+                <button id="openModalButton" class="bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600">Create Activity</button>
+                    <div class="border border-gray-300 w-[53vw] h-40 pl-4 pt-4 mt-5 rounded-lg">
+                        <div class="w-full grid grid-cols-5 gap-1">
+                            <div class="w-32 h-20 bg-red-500 rounded-lg flex flex-col justify-center items-center">
+                                <p class="text-white text-lg font-semibold">08</p>
+                                <p class="text-white font-bold text-lg">January</p>
+                                <p class="text-white text-lg font-semibold">2025</p>
+                            </div>
+                            <div class="w-60 h-20 rounded-lg ">
+                                <p class="text-lg font-semibold ml-2 pb-6">olahraga rutin</p>
+                                <p class="text-sm font-semibold ml-2">lapangan </p>
+                            </div>
+                            <div class="w-60 h-20 rounded-lg ">
+                                <
+                            </div>
+                            <div class="w-60 h-20 rounded-lg ">
+                                
+                            </div>
+                            <div class="w-full flex justify-center item-center">
+                                <p class="text-sm font-semibold ">Payment amount: Rp 20000</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p  class="text-sm font-semibold ml-2 "> Deskripsi: Ayo ikuti keseruan komuitas ini dengan berolahraga bersama</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="activityModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 z-40 flex justify-center items-center hidden">
+                    <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+                        <h2 class="text-xl font-bold mb-4">Create New Activity</h2>
+                        <form id="activityForm">
+                            <div class="mb-4">
+                                <label for="activityName" class="block text-sm font-medium text-gray-700">Activity Name</label>
+                                <input type="text" id="activityName" name="activityName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+                                <input type="date" id="date" name="date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="mb-4 grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="startTime" class="block text-sm font-medium text-gray-700">Start Time</label>
+                                    <input type="time" id="startTime" name="startTime" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label for="endTime" class="block text-sm font-medium text-gray-700">End Time</label>
+                                    <input type="time" id="endTime" name="endTime" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                                <input type="text" id="location" name="location" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="paymentAmount" class="block text-sm font-medium text-gray-700">Payment Amount</label>
+                                <input type="number" id="paymentAmount" name="paymentAmount" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea id="description" name="description" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="button" id="closeModalButton" class="bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600 mr-2">Cancel</button>
+                                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
                 <script>
                     // Select all buttons and tab contents
                     const tabButtons = document.querySelectorAll('.tab-btn');
@@ -300,6 +334,24 @@
                           button.classList.add('bg-red-500', 'text-white');
                           button.classList.remove('bg-gray-200', 'text-gray-700');
                        });
+                    });
+
+                     const openModalButton = document.getElementById('openModalButton');
+                    const closeModalButton = document.getElementById('closeModalButton');
+                    const activityModal = document.getElementById('activityModal');
+
+                    openModalButton.addEventListener('click', () => {
+                        activityModal.classList.remove('hidden');
+                    });
+
+                    closeModalButton.addEventListener('click', () => {
+                        activityModal.classList.add('hidden');
+                    });
+
+                    document.getElementById('activityForm').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        alert('Activity submitted!');
+                        activityModal.classList.add('hidden');
                     });
                  </script>
             @else

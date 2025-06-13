@@ -154,70 +154,106 @@
     <!-- Main Content -->
     <div class="p-4 sm:ml-64 pt-20">
         <div class="p-4 rounded-lg">
-            <div class="w-2/5 flex flex-col gap-4">
             @if($groups)
-                <div class="h-auto bg-white rounded-lg p-4 shadow-xl">
-                <a href="/sportsgroup">
-                    <div class="flex w-full">
-                    <i class="fi fi-rs-arrow-left"></i>
-                    <p class="text-xs text-gray-500 mt-0.5 ml-1">Back</p>
-                    </div>
-                </a>
-                <h1 id="title" class="font-bold text-red-700 mb-4 text-2xl">{{ $groups->title }}</h1>
-                <a href="{{ route('sports-group.edit', $groups->id) }}">
-                    <div class="bg-red-700 p-2 w-1/2">
-                        <p class="text-white text-xs text-center">Edit</p>
-                    </div>
-                </a>
-                <p id="description" class="text-sm text-justify tracking-tight mt-4"></p>
-                </div>
+            <div class="h-auto bg-white rounded-lg p-4 shadow-xl">
+                <!-- Flex container untuk back button dan title -->
+                <div class="flex items-center justify-between mb-4">
+                    <a href="{{ route('sports-group.index') }}" class="flex items-center text-gray-500 hover:text-red-700 transition-colors">
+                        <i class="fi fi-rs-arrow-left"></i>
+                        <p class="text-lg mt-0.5 ml-1"><-- Back</p>
+                    </a>
 
-                <div class="h-auto bg-white rounded-lg p-4 shadow-xl">
-                <h2 class="text-lg font-semibold mb-4">Date and Time</h2>
-                <div class="flex items-center mb-2">
-                    <i class="fa-regular fa-calendar" style="color: #D60505;"></i>
-                    <p id="event-date" class="text-sm ml-4">{{ $groups->event_date }}</p>
-                </div>
-                <div class="flex items-center">
-                    <i class="fa-regular fa-clock" style="color: #D60505;"></i>
-                    <p id="event-time" class="text-sm ml-4">{{ $groups->start_time }} - {{ $groups->end_time }}</p>
-                </div>
-                <h2 class="text-lg font-semibold my-4">Venue</h2>
-                <div class="flex items-center">
-                    <i class="fi fi-rs-court-sport" style="color: #D60505;"></i>
-                    <p id="venue-name" class="text-sm ml-4">{{ $groups->address }}</p>
-                </div>
+                    <h1 id="title" class="font-bold text-red-700 text-2xl text-center flex-grow">
+                        {{ $groups->title }}
+                    </h1>
+
+                    <div class="w-28"></div>
                 </div>
             </div>
 
-            <div class="h-auto bg-white rounded-lg p-4 shadow-xl">
-                <h1 id="price" class="text-xl text-red-700 font-bold text-center">{{ $groups->current_members }} - {{ $groups->kapasitas_maksimal }}</h1>
-                <form action="{{ route('sports-group.join', $groups->id) }}" method="POST" class="my-4">
-                    @csrf
-                    <button type="submit" class="w-full bg-red-700 text-white py-2 rounded hover:bg-red-800 transition">
-                        JOIN NOW
-                    </button>
-                </form>
+            <!-- Flex container untuk Date & Time dan Organizer -->
+            <div class="pt-10 flex gap-4">
+                <!-- Date and Time -->
+                <div class="w-1/2 h-auto bg-white rounded-lg p-4 shadow-xl">
+                    <h2 class="text-lg font-semibold mb-4">Date and Time</h2>
+                    <div class="flex items-center mb-2">
+                        <i class="fa-regular fa-calendar" style="color: #D60505;"></i>
+                        <p id="event-date" class="text-sm ml-4">{{ $groups->event_date }}</p>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fa-regular fa-clock" style="color: #D60505;"></i>
+                        <p id="event-time" class="text-sm ml-4">{{ $groups->start_time }} - {{ $groups->end_time }}</p>
+                    </div>
+                    <h2 class="text-lg font-semibold my-4">Venue</h2>
+                    <div class="flex items-center">
+                        <i class="fi fi-rs-court-sport" style="color: #D60505;"></i>
+                        <p id="venue-name" class="text-sm ml-4">{{ $groups->address }}</p>
+                    </div>
+                </div>
+
+                <!-- Organizer -->
+                <div class="w-1/2 h-auto bg-white rounded-lg p-4 shadow-xl">
+                <h2 class="text-lg font-semibold mb-4">Group Members</h2>
+
+                @foreach ($groups->members as $member)
+                    <div class="flex items-center mb-3">
+                        <img src="{{ Auth::user()->photo }}" alt="Member Photo" class="w-10 h-10 rounded-full">
+                        <div class="ml-4">
+                            <p class="text-sm font-semibold">{{ $member->user->username }}</p>
+                            <p class="text-xs text-gray-500">{{ $member->user->email }}</p>
+                            @if ($member->user_id == $groups->user_id)
+                                <span class="text-xs text-blue-600 font-semibold">(Organizer)</span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            </div>
+
+            <!-- Section bawah: Join/Edit, Lokasi dan Maps -->
+            <div class="h-auto bg-white rounded-lg p-4 shadow-xl mt-6">
+                <h1 id="price" class="text-xl text-red-700 font-bold text-center">{{ $groups->current_members }} / {{ $groups->kapasitas_maksimal }}</h1>
+
+                @php
+                    $isCreator = Auth::id() === $groups->user_id;
+                    $isMember = \App\Models\MemberSportsgroup::where('id', $groups->id)->where('user_id', Auth::id())->exists();
+                @endphp
+
+                @if ($isCreator)
+                    <a href="{{ route('sports-group.edit', $groups->id) }}" class="block text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Edit Group</a>
+                @elseif ($isMember)
+                    <form action="{{ route('sports-group.leave', $groups->id) }}" method="POST" onsubmit="return confirm('Yakin ingin keluar dari grup?');">
+                        @csrf
+                        <button type="submit" class="w-full bg-orange-600 text-white py-2 rounded hover:bg-orange-700">Leave Group</button>
+                    </form>
+                @else
+                    <form action="{{ route('sports-group.join', $groups->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="w-full bg-red-700 text-white py-2 rounded hover:bg-red-800">Join Group</button>
+                    </form>
+                @endif
 
                 <div class="flex mt-4 items-center">
-                <i class="fa-solid fa-map-location-dot fa-lg" style="color: #d60505;"></i>
-                <p class="text-lg font-semibold ml-4">Location</p>
+                    <i class="fa-solid fa-map-location-dot fa-lg" style="color: #d60505;"></i>
+                    <p class="text-lg font-semibold ml-4">Location</p>
                 </div>
                 <p id="full-address" class="text-sm ml-10">{{ $groups->address }}</p>
 
                 <iframe class="w-full h-80 mt-4"
-                src="https://www.google.com/maps?q=Jl.%20Banda%20No.28,%20Citarum,%20Bandung&output=embed"
-                style="border:0;"
-                allowfullscreen
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
+                    src="https://www.google.com/maps?q=Jl.%20Banda%20No.28,%20Citarum,%20Bandung&output=embed"
+                    style="border:0;"
+                    allowfullscreen
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
-             @else
+            </div>
+            @else
             <p class="text-center text-gray-500">Tidak ada data sportsgroup tersedia.</p>
             @endif
-            </div>
         </div>
     </div>
+
 
     <script>
         // Toggle dropdown menu

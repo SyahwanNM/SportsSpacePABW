@@ -19,7 +19,7 @@ class SportsGroupController extends Controller
     // Detail satu sportsgroup
     public function show($id)
     {
-        $groups = SportsGroup::find($id);
+        $groups = SportsGroup::with(['members.user', 'user'])->find($id);
 
         if (!$groups) {
             return redirect()->route('sports-group.index')->with('error', 'Group not found');
@@ -144,6 +144,43 @@ class SportsGroupController extends Controller
 
         $group->increment('current_members');
 
-        return redirect()->route('sports-group.index')->with('status', 'Berhasil Bergabung dengan SportsGroup.');
+        return redirect()->route('sports-group.show', $id)
+        ->with('status', 'Berhasil bergabung grup.');
     }
+
+    // Keluar dari sportsgroup
+    public function leave($id)
+    {
+        $group = SportsGroup::findOrFail($id);
+
+        // Cek apakah user adalah pembuat grup
+        if ($group->user_id === Auth::id()) {
+            return redirect()->route('sports-group.index')
+                ->with('status', 'Kamu adalah pembuat grup dan tidak bisa keluar. Hapus grup jika ingin mengakhiri.');
+        }
+
+        // Cari keanggotaan user
+        $membership = MemberSportsgroup::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$membership) {
+            return redirect()->route('sports-group.index')
+                ->with('status', 'Kamu belum tergabung dalam grup ini.');
+        }
+
+        // Hapus keanggotaan
+        $membership->delete();
+
+        // Kurangi jumlah anggota (pastikan tidak negatif)
+        if ($group->current_members > 0) {
+            $group->decrement('current_members');
+        }
+
+        return redirect()->route('sports-group.show', $id)
+        ->with('status', 'Berhasil keluar dari grup.');
+    }
+
+
+
 }
