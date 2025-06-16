@@ -51,7 +51,8 @@ class LapanganController extends Controller
             'fasility' => $request->fasility,
             'price' => $request->price,
             'description' => $request->description,
-            'address' => $request->address
+            'address' => $request->address,
+            'user_id' => auth()->id()
         ]);
 
         return redirect()->route('admin.lapangan.index')->with('success', 'Lapangan berhasil ditambahkan');

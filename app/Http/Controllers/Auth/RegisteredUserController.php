@@ -55,7 +55,7 @@ class RegisteredUserController extends Controller
                 'kota' => $request->kota,
                 'password' => Hash::make($request->password),
                 'role' => 'user',
-                'photo' => '/storage/profile/default.jpeg',
+                'photo' => 'profile/default.jpeg',
                 'total_poin' => 0,
             ];
 

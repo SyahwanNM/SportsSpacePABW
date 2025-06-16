@@ -11,6 +11,8 @@ class Komunitas extends Model
 
     protected $table = 'komunitas';
     protected $primaryKey = 'id_kmnts';
+    public $timestamps = true;
+
     protected $fillable = [
         'nama',
         'jns_olahraga',
@@ -21,9 +23,13 @@ class Komunitas extends Model
         'foto',
         'sampul',
         'status',
-        'user_id',
+        'user_id'
     ];
-    
+
+    protected $casts = [
+        'id_kmnts' => 'integer',
+        'status' => 'integer',
+    ];
 
     public function user()
     {

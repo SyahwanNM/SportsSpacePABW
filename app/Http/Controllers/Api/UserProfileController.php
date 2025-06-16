@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 
 class UserProfileController extends Controller
 {
@@ -24,13 +25,18 @@ class UserProfileController extends Controller
         
         // Generate full URL for photo if it exists
         if ($userData['photo'] && $userData['photo'] !== 'null' && $userData['photo'] !== '') {
-            // If the photo path doesn't start with http, prepend the app URL
+            // If the photo path doesn't start with http, prepend the app URL with /api/files/
             if (!str_starts_with($userData['photo'], 'http')) {
-                $userData['photo'] = asset('storage/' . $userData['photo']);
+                // Ensure we get the relative path correctly if it already contains storage/ or api/files/
+                $relativePath = $userData['photo'];
+                if (str_starts_with($relativePath, 'storage/')) {
+                    $relativePath = substr($relativePath, strlen('storage/'));
+                }
+                $userData['photo'] = Config::get('app.url') . '/api/files/' . $relativePath;
             }
             Log::info('Generated photo URL:', ['url' => $userData['photo']]);
         } else {
-            $userData['photo'] = asset('storage/profile/default.jpeg');
+            $userData['photo'] = Config::get('app.url') . '/api/files/profile/default.jpeg';
         }
 
         return response()->json([
@@ -123,13 +129,18 @@ class UserProfileController extends Controller
             
             // Generate full URL for photo if it exists
             if ($userData['photo'] && $userData['photo'] !== 'null' && $userData['photo'] !== '') {
-                // If the photo path doesn't start with http, prepend the app URL
+                // If the photo path doesn't start with http, prepend the app URL with /api/files/
                 if (!str_starts_with($userData['photo'], 'http')) {
-                    $userData['photo'] = asset('storage/' . $userData['photo']);
+                    // Ensure we get the relative path correctly if it already contains storage/ or api/files/
+                    $relativePath = $userData['photo'];
+                    if (str_starts_with($relativePath, 'storage/')) {
+                        $relativePath = substr($relativePath, strlen('storage/'));
+                    }
+                    $userData['photo'] = Config::get('app.url') . '/api/files/' . $relativePath;
                 }
                 Log::info('Generated photo URL:', ['url' => $userData['photo']]);
             } else {
-                $userData['photo'] = asset('storage/profile/default-profile.jpg');
+                $userData['photo'] = Config::get('app.url') . '/api/files/profile/default-profile.jpg';
             }
 
             return response()->json([

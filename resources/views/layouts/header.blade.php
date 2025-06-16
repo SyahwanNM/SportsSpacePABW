@@ -18,12 +18,41 @@
             <div class="flex-1 mx-8">
                 <div class="flex items-center space-x-4">
                     <div class="relative flex-1">
-                        <input type="text" placeholder="Search posts, events, or users..." 
+                        <input type="text" id="searchInput" placeholder="Search users, fields, or communities..." 
                                class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-red-500">
                         <button class="absolute right-3 top-2.5">
                             <i class="ri-search-line text-gray-400"></i>
                </button>
-            </div>
+                        
+                        <!-- Search Results Dropdown -->
+                        <div id="searchResults" class="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
+                            <div class="p-4">
+                                <!-- Users Section -->
+                                <div class="mb-4">
+                                    <h3 class="text-sm font-semibold text-gray-700 mb-2">Users</h3>
+                                    <div id="userResults" class="space-y-2">
+                                        <!-- User results will be populated here -->
+                                    </div>
+                                </div>
+
+                                <!-- Fields Section -->
+                                <div class="mb-4">
+                                    <h3 class="text-sm font-semibold text-gray-700 mb-2">Fields</h3>
+                                    <div id="fieldResults" class="space-y-2">
+                                        <!-- Field results will be populated here -->
+                                    </div>
+                                </div>
+
+                                <!-- Communities Section -->
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-700 mb-2">Communities</h3>
+                                    <div id="communityResults" class="space-y-2">
+                                        <!-- Community results will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <button class="p-2 text-gray-600 hover:text-red-600 transition-colors">
                         <i class="ri-filter-3-line text-xl"></i>
             </button>
@@ -78,41 +107,168 @@
 @push('scripts')
           <script>
 document.addEventListener('DOMContentLoaded', function() {
-                        // Function to update profile image
-                        function updateProfileImage(photoUrl) {
-        const dashboardImage = document.getElementById('dashboardProfileImage');
-                           if (photoUrl && photoUrl !== 'null' && photoUrl !== '') {
-                              // Add timestamp to prevent caching
-                              const timestamp = new Date().getTime();
-                              const imageUrl = photoUrl.startsWith('http') ? photoUrl : `{{ asset('') }}${photoUrl}`;
-            dashboardImage.src = `${imageUrl}?t=${timestamp}`;
-                              
-                              // Add error handling for image loading
-            dashboardImage.onerror = function() {
-                                 console.error('Error loading profile image:', imageUrl);
-                this.src = "{{ asset('storage/profile/default.jpeg') }}";
-                              };
-                           } else {
-            dashboardImage.src = "{{ asset('storage/profile/default.jpeg') }}";
-                           }
-                           }
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const userResults = document.getElementById('userResults');
+    const fieldResults = document.getElementById('fieldResults');
+    const communityResults = document.getElementById('communityResults');
+    
+    let searchTimeout;
 
-                           // Listen for profile updates
-                           window.addEventListener('profileUpdated', function(e) {
-                              if (e.detail && e.detail.photo) {
-                                 updateProfileImage(e.detail.photo);
-                              }
-                           });
+    // Get CSRF token from meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        
+        // Clear previous timeout
+        clearTimeout(searchTimeout);
+        
+        // Hide results if query is too short
+        if (query.length < 2) {
+            searchResults.classList.add('hidden');
+            return;
+        }
+
+        // Set new timeout
+        searchTimeout = setTimeout(() => {
+            // Clear previous results
+            userResults.innerHTML = '';
+            fieldResults.innerHTML = '';
+            communityResults.innerHTML = '';
+
+            // Show loading state
+            searchResults.classList.remove('hidden');
+            userResults.innerHTML = '<div class="p-2 text-sm text-gray-500">Searching...</div>';
+
+            // Make the search request
+            fetch(`/search?query=${encodeURIComponent(query)}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Clear loading state
+                userResults.innerHTML = '';
+                
+                // Populate user results
+                if (data.users && data.users.length > 0) {
+                    data.users.forEach(user => {
+                        userResults.innerHTML += `
+                            <a href="/profile/${user.user_id}" class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg">
+                                <img src="${user.photo}" alt="${user.username}" class="w-8 h-8 rounded-full object-cover">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">${user.username}</p>
+                                    <p class="text-xs text-gray-500">${user.email}</p>
+                                </div>
+                            </a>
+                        `;
+                    });
+                } else {
+                    userResults.innerHTML = '<div class="p-2 text-sm text-gray-500">No users found</div>';
+                }
+
+                // Populate field results
+                if (data.lapangans && data.lapangans.length > 0) {
+                    data.lapangans.forEach(field => {
+                        fieldResults.innerHTML += `
+                            <a href="/lapangan/${field.id_field}" class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg">
+                                <img src="${field.foto}" alt="${field.nama_lapangan}" class="w-8 h-8 rounded-lg object-cover">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">${field.nama_lapangan}</p>
+                                    <p class="text-xs text-gray-500">${field.type} - ${field.categori}</p>
+                                </div>
+                            </a>
+                        `;
+                    });
+                } else {
+                    fieldResults.innerHTML = '<div class="p-2 text-sm text-gray-500">No fields found</div>';
+                }
+
+                // Populate community results
+                if (data.komunitas && data.komunitas.length > 0) {
+                    data.komunitas.forEach(community => {
+                        communityResults.innerHTML += `
+                            <a href="/komunitas/${community.id_komunitas}" class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg">
+                                <img src="${community.foto}" alt="${community.nama}" class="w-8 h-8 rounded-lg object-cover">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">${community.nama}</p>
+                                    <p class="text-xs text-gray-500">${community.jns_olahraga}</p>
+                                </div>
+                            </a>
+                        `;
+                    });
+                } else {
+                    communityResults.innerHTML = '<div class="p-2 text-sm text-gray-500">No communities found</div>';
+                }
+
+                // Show results if any
+                if ((data.users && data.users.length > 0) || 
+                    (data.lapangans && data.lapangans.length > 0) || 
+                    (data.komunitas && data.komunitas.length > 0)) {
+                    searchResults.classList.remove('hidden');
+                } else {
+                    searchResults.classList.add('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Search error:', error);
+                userResults.innerHTML = '<div class="p-2 text-sm text-red-500">Error performing search</div>';
+                fieldResults.innerHTML = '';
+                communityResults.innerHTML = '';
+            });
+        }, 300); // 300ms delay
+    });
+
+    // Hide results when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.classList.add('hidden');
+        }
+    });
+
+    // Function to update profile image
+    function updateProfileImage(photoUrl) {
+        const dashboardImage = document.getElementById('dashboardProfileImage');
+        if (photoUrl && photoUrl !== 'null' && photoUrl !== '') {
+            // Add timestamp to prevent caching
+            const timestamp = new Date().getTime();
+            const imageUrl = photoUrl.startsWith('http') ? photoUrl : `{{ asset('') }}${photoUrl}`;
+            dashboardImage.src = `${imageUrl}?t=${timestamp}`;
+            
+            // Add error handling for image loading
+            dashboardImage.onerror = function() {
+                console.error('Error loading profile image:', imageUrl);
+                this.src = "{{ asset('storage/profile/default.jpeg') }}";
+            };
+        } else {
+            dashboardImage.src = "{{ asset('storage/profile/default.jpeg') }}";
+        }
+    }
+
+    // Listen for profile updates
+    window.addEventListener('profileUpdated', function(e) {
+        if (e.detail && e.detail.photo) {
+            updateProfileImage(e.detail.photo);
+        }
+    });
 
     // Initial profile image update
-                     const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
     if (token) {
         fetch('/api/user', {
-                        headers: {
-                           'Authorization': `Bearer ${token}`,
-                           'Accept': 'application/json',
-                           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
         })
         .then(res => res.json())
         .then(user => {
@@ -124,6 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error fetching user data:', error);
         });
     }
-                  });
-               </script>
+});
+</script>
 @endpush

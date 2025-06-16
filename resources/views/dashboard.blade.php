@@ -95,188 +95,191 @@
 @push('scripts')
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Function to update profile image
-    function updateProfileImage(photoUrl) {
-        const dashboardImage = document.getElementById('dashboardProfileImage');
-        if (photoUrl && photoUrl !== 'null' && photoUrl !== '') {
-            const timestamp = new Date().getTime();
-            dashboardImage.src = `${photoUrl}?t=${timestamp}`;
-            
-            dashboardImage.onerror = function() {
-                console.error('Error loading profile image:', photoUrl);
-                this.src = "{{ asset('storage/profile/default.jpeg') }}";
-            };
-        } else {
-            dashboardImage.src = "{{ asset('storage/profile/default.jpeg') }}";
-        }
-    }
+        // Get CSRF token once
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const authToken = localStorage.getItem('auth_token');
 
-    // Initial profile image update
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-        fetch('/api/user', {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(res => res.json())
-        .then(user => {
-            if (user.photo) {
-                updateProfileImage(user.photo);
+        // Function to update profile image
+        function updateProfileImage(photoUrl) {
+            const dashboardImage = document.getElementById('dashboardProfileImage');
+            if (photoUrl && photoUrl !== 'null' && photoUrl !== '') {
+                const timestamp = new Date().getTime();
+                dashboardImage.src = `${photoUrl}?t=${timestamp}`;
+                
+                dashboardImage.onerror = function() {
+                    console.error('Error loading profile image:', photoUrl);
+                    this.src = "{{ asset('storage/profile/default.jpeg') }}";
+                };
             } else {
-                updateProfileImage("{{ asset('storage/profile/default.jpeg') }}");
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching user data:', error);
-            updateProfileImage("{{ asset('storage/profile/default.jpeg') }}");
-        });
-    }
-
-    // --- New JavaScript for Create Post Form Toggle and Submission ---
-    const createPostBtn = document.getElementById('createPostBtn');
-    const postFormDiv = document.getElementById('postForm');
-    const newPostForm = document.getElementById('newPostForm');
-    const cancelPostBtn = document.getElementById('cancelPostBtn');
-    const postsListContainer = document.getElementById('posts-list');
-
-    createPostBtn.addEventListener('click', function() {
-        postFormDiv.classList.toggle('hidden');
-        if (!postFormDiv.classList.contains('hidden')) {
-            newPostForm.reset();
-            clearErrors();
-        }
-    });
-
-    cancelPostBtn.addEventListener('click', function() {
-        postFormDiv.classList.add('hidden');
-        newPostForm.reset();
-        clearErrors();
-    });
-
-    function clearErrors() {
-        document.getElementById('titleError').textContent = '';
-        document.getElementById('titleError').classList.add('hidden');
-        document.getElementById('contentError').textContent = '';
-        document.getElementById('contentError').classList.add('hidden');
-        document.getElementById('imageError').textContent = '';
-        document.getElementById('imageError').classList.add('hidden');
-    }
-
-    newPostForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        clearErrors();
-
-        const formData = new FormData(this);
-        
-        const imageInput = document.getElementById('post_image');
-        if (imageInput.files[0]) {
-            const file = imageInput.files[0];
-            if (file.size > 2 * 1024 * 1024) {
-                document.getElementById('imageError').textContent = 'Image size must be less than 2MB';
-                document.getElementById('imageError').classList.remove('hidden');
-                return;
-            }
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-            if (!validTypes.includes(file.type)) {
-                document.getElementById('imageError').textContent = 'Only JPG, JPEG, and PNG files are allowed';
-                document.getElementById('imageError').classList.remove('hidden');
-                return;
+                dashboardImage.src = "{{ asset('storage/profile/default.jpeg') }}";
             }
         }
 
-        try {
-            const response = await fetch('{{ route('posts.store') }}', {
-                method: 'POST',
+        // Initial profile image update
+        if (authToken) {
+            fetch('/api/user', {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json'
-                },
-                body: formData
+                    'Authorization': `Bearer ${authToken}`,
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(res => res.json())
+            .then(user => {
+                if (user.photo) {
+                    updateProfileImage(user.photo);
+                } else {
+                    updateProfileImage("{{ asset('storage/profile/default.jpeg') }}");
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+                updateProfileImage("{{ asset('storage/profile/default.jpeg') }}");
             });
+        }
 
-            const data = await response.json();
+        // --- New JavaScript for Create Post Form Toggle and Submission ---
+        const createPostBtn = document.getElementById('createPostBtn');
+        const postFormDiv = document.getElementById('postForm');
+        const newPostForm = document.getElementById('newPostForm');
+        const cancelPostBtn = document.getElementById('cancelPostBtn');
+        const postsListContainer = document.getElementById('posts-list');
 
-            if (response.ok) {
-                alert('Post created successfully!'); 
-                postFormDiv.classList.add('hidden');
+        createPostBtn.addEventListener('click', function() {
+            postFormDiv.classList.toggle('hidden');
+            if (!postFormDiv.classList.contains('hidden')) {
                 newPostForm.reset();
                 clearErrors();
+            }
+        });
 
-                // Prepend the new post to the list
-                const newPostHtml = `
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <div class="flex items-center space-x-4 mb-4">
-                            <img src="${data.post.user.photo}" alt="Profile" class="w-10 h-10 rounded-full object-cover" onerror="this.src='{{ asset('storage/profile/default.jpeg') }}'">
-                            <div>
-                                <h3 class="font-semibold text-gray-900">${data.post.user.username}</h3>
-                                <p class="text-sm text-gray-500">${moment(data.post.created_at).fromNow()}</p>
-                            </div>
-                            <div class="ml-auto flex space-x-2">
-                                <a href="/posts/${data.post.id_post}/edit" class="text-gray-500 hover:text-gray-700">
-                                    <i class="ri-edit-line"></i>
-                                </a>
-                                <form action="/posts/${data.post.id_post}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this post?')">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="text-gray-500 hover:text-red-600">
-                                        <i class="ri-delete-bin-line"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                        <p class="text-gray-700 mb-4">${data.post.post_content}</p>
-                        ${data.post.post_image ? `<img src="{{ asset('storage/') }}/${data.post.post_image}" alt="Post Image" class="w-full h-48 object-cover rounded-lg">` : ''}
-                    </div>
-                `;
+        cancelPostBtn.addEventListener('click', function() {
+            postFormDiv.classList.add('hidden');
+            newPostForm.reset();
+            clearErrors();
+        });
 
-                if (postsListContainer.querySelector('.text-center.text-gray-500')) {
-                    postsListContainer.innerHTML = newPostHtml;
-                } else {
-                    postsListContainer.insertAdjacentHTML('afterbegin', newPostHtml);
+        function clearErrors() {
+            document.getElementById('titleError').textContent = '';
+            document.getElementById('titleError').classList.add('hidden');
+            document.getElementById('contentError').textContent = '';
+            document.getElementById('contentError').classList.add('hidden');
+            document.getElementById('imageError').textContent = '';
+            document.getElementById('imageError').classList.add('hidden');
+        }
+
+        newPostForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearErrors();
+
+            const formData = new FormData(this);
+            
+            const imageInput = document.getElementById('post_image');
+            if (imageInput.files[0]) {
+                const file = imageInput.files[0];
+                if (file.size > 2 * 1024 * 1024) {
+                    document.getElementById('imageError').textContent = 'Image size must be less than 2MB';
+                    document.getElementById('imageError').classList.remove('hidden');
+                    return;
                 }
-
-            } else if (response.status === 401 || response.redirected) {
-                alert('Sesi Anda telah berakhir atau Anda tidak terautentikasi. Mohon login kembali.');
-                localStorage.removeItem('auth_token');
-                window.location.href = '{{ route('login') }}';
-            } else {
-                let errorMsg = 'An unknown error occurred.';
-                if (data.errors) {
-                    // Map validation errors to specific error paragraphs
-                    for (const key in data.errors) {
-                        if (key === 'post_title') {
-                            document.getElementById('titleError').textContent = data.errors[key][0];
-                            document.getElementById('titleError').classList.remove('hidden');
-                        } else if (key === 'post_content') {
-                            document.getElementById('contentError').textContent = data.errors[key][0];
-                            document.getElementById('contentError').classList.remove('hidden');
-                        } else if (key === 'post_image') {
-                            document.getElementById('imageError').textContent = data.errors[key][0];
-                            document.getElementById('imageError').classList.remove('hidden');
-                        }
-                    }
-                    // If there are other errors not tied to a specific field, show a general alert
-                    const generalErrors = Object.keys(data.errors).filter(key => 
-                        key !== 'post_title' && key !== 'post_content' && key !== 'post_image'
-                    ).map(key => data.errors[key][0]);
-                    if (generalErrors.length > 0) {
-                        alert('Error: ' + generalErrors.join('\n'));
-                    }
-                } else if (data.message) {
-                    alert('Error: ' + data.message);
-        } else {
-                    alert('Error: ' + errorMsg);
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                if (!validTypes.includes(file.type)) {
+                    document.getElementById('imageError').textContent = 'Only JPG, JPEG, and PNG files are allowed';
+                    document.getElementById('imageError').classList.remove('hidden');
+                    return;
                 }
             }
-        } catch (error) {
-            console.error('Error creating post:', error);
-            alert('An error occurred while creating the post.');
-        }
+
+            try {
+                const response = await fetch('{{ route('posts.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Post created successfully!'); 
+                    postFormDiv.classList.add('hidden');
+                    newPostForm.reset();
+                    clearErrors();
+
+                    // Prepend the new post to the list
+                    const newPostHtml = `
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <img src="${data.post.user.photo}" alt="Profile" class="w-10 h-10 rounded-full object-cover" onerror="this.src='{{ asset('storage/profile/default.jpeg') }}'">
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">${data.post.user.username}</h3>
+                                    <p class="text-sm text-gray-500">${moment(data.post.created_at).fromNow()}</p>
+                                </div>
+                                <div class="ml-auto flex space-x-2">
+                                    <a href="/posts/${data.post.id_post}/edit" class="text-gray-500 hover:text-gray-700">
+                                        <i class="ri-edit-line"></i>
+                                    </a>
+                                    <form action="/posts/${data.post.id_post}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this post?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="text-gray-500 hover:text-red-600">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <p class="text-gray-700 mb-4">${data.post.post_content}</p>
+                            ${data.post.post_image ? `<img src="${data.post.post_image}" alt="Post Image" class="w-full h-48 object-cover rounded-lg">` : ''}
+                        </div>
+                    `;
+
+                    if (postsListContainer.querySelector('.text-center.text-gray-500')) {
+                        postsListContainer.innerHTML = newPostHtml;
+                    } else {
+                        postsListContainer.insertAdjacentHTML('afterbegin', newPostHtml);
+                    }
+
+                } else if (response.status === 401 || response.redirected) {
+                    alert('Sesi Anda telah berakhir atau Anda tidak terautentikasi. Mohon login kembali.');
+                    localStorage.removeItem('auth_token');
+                    window.location.href = '{{ route('login') }}';
+                } else {
+                    let errorMsg = 'An unknown error occurred.';
+                    if (data.errors) {
+                        // Map validation errors to specific error paragraphs
+                        for (const key in data.errors) {
+                            if (key === 'post_title') {
+                                document.getElementById('titleError').textContent = data.errors[key][0];
+                                document.getElementById('titleError').classList.remove('hidden');
+                            } else if (key === 'post_content') {
+                                document.getElementById('contentError').textContent = data.errors[key][0];
+                                document.getElementById('contentError').classList.remove('hidden');
+                            } else if (key === 'post_image') {
+                                document.getElementById('imageError').textContent = data.errors[key][0];
+                                document.getElementById('imageError').classList.remove('hidden');
+                            }
+                        }
+                        // If there are other errors not tied to a specific field, show a general alert
+                        const generalErrors = Object.keys(data.errors).filter(key => 
+                            key !== 'post_title' && key !== 'post_content' && key !== 'post_image'
+                        ).map(key => data.errors[key][0]);
+                        if (generalErrors.length > 0) {
+                            alert('Error: ' + generalErrors.join('\n'));
+                        }
+                    } else if (data.message) {
+                        alert('Error: ' + data.message);
+                    } else {
+                        alert('Error: ' + errorMsg);
+                    }
+                }
+            } catch (error) {
+                console.error('Error creating post:', error);
+                alert('An error occurred while creating the post.');
+            }
+        });
     });
-});
     </script>
 @endpush

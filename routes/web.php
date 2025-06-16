@@ -13,6 +13,7 @@ use App\Http\Controllers\LapanganController;
 use App\Http\Controllers\RatingLapanganController;
 use App\Http\Controllers\KomunitasController;
 Use App\Http\Controllers\SportsGroupController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,9 @@ Route::middleware('guest')->group(function () {
         ->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 });
+
+// Search route (accessible without auth)
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {

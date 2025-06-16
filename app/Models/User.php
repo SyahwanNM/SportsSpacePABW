@@ -44,7 +44,10 @@ class User extends Authenticatable
     {
         if ($value && $value !== 'null' && $value !== '') {
             if (!str_starts_with($value, 'http')) {
-                return asset('storage/' . ltrim($value, 'storage/'));
+                // Remove any leading 'storage/' or '/' from the path
+                $path = ltrim($value, 'storage/');
+                $path = ltrim($path, '/');
+                return asset('storage/' . $path);
             }
             return $value;
         }
